@@ -2,9 +2,26 @@ from django.shortcuts import render,redirect
 from django.core.exceptions import ObjectDoesNotExist
 from .forms import AutorForm
 from .models import Autor
+from django.views.generic import TemplateView,ListView
 # Create your views here.
-def Home(request):
-    return render(request,'index.html')
+
+"""
+    1.- dispatch(): valida la peticion y elige que metodo HTTP se utilizo para la solicitud
+    2.- http_method_not_allowed(): retorna un error cuando se utiliza un metodo HTTP no soportado o definido
+    3.- options()
+"""
+
+
+class Inicio(TemplateView):
+    template_name = 'index.html'
+
+
+class ListadoAutor(ListView):
+    model = Autor
+    template_name = 'libro/listar_autor.html'
+    context_object_name = 'autores'
+    queryset = Autor.objects.filter(estado = True)
+
 
 def crearAutor(request):
     if request.method == 'POST':
