@@ -1,0 +1,44 @@
+{% extends 'index.html' %}
+{% block titulo %}
+  Biblioteca.dev | Registro de Autores
+{% endblock titulo %}
+
+{% block body %}
+<form method="POST">
+  {% csrf_token %}
+  {% if error %}
+    <h2>{{ error }}</h2>
+  {% else %}
+      <div class="card">
+          <div class="card-header">
+              <strong>Formulario de Registro</strong>
+          </div>
+          <div class="card-body card-block">
+              <form action="#" method="post" enctype="multipart/form-data" class="form-horizontal">
+                  <div class="row form-group">
+                      <div class="col col-md-3"><label for="text-input" class=" form-control-label">Nombres</label></div>
+                      <div class="col-12 col-md-9"><input type="text"  name="nombres" placeholder="Ingrese el nombre del autor" class="form-control"></div>
+                  </div>
+                  <div class="row form-group">
+                      <div class="col col-md-3"><label for="text-input" class=" form-control-label">Apellidos</label></div>
+                      <div class="col-12 col-md-9"><input type="text"  name="apellidos" placeholder="Ingrese los apellidos del autor" class="form-control"></div>
+                  </div>
+                  <div class="row form-group">
+                      <div class="col col-md-3"><label for="text-input" class=" form-control-label">Nacionalidad</label></div>
+                      <div class="col-12 col-md-9"><input type="text"  name="nacionalidad" placeholder="Ingrese la nacionalidad del autor" class="form-control"></div>
+                  </div>
+                  <div class="row form-group">
+                      <div class="col col-md-3"><label for="textarea-input" class=" form-control-label">Descripción</label></div>
+                      <div class="col-12 col-md-9"><textarea name="descripcion"  placeholder="Ingrese una pequeña descripción del autor" class="form-control"></textarea></div>
+                  </div>
+                  <div class="text-center">
+                      <button type="submit" class="btn btn-primary">Registrar</button>
+                      <button type="reset" class="btn btn-danger">Cancelar</button>
+                  </div>
+              </form>
+          </div>
+      </div>
+  {% endif %}
+</form>
+
+{% endblock body %}

@@ -1,0 +1,124 @@
+{% load staticfiles %}
+<!Doctype html>
+<html class="no-js" lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>{% block titulo %}Bienvenido a Biblioteca.dev {% endblock titulo %}</title>
+    <meta name="description" content="Ela Admin - HTML5 Admin Template">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.0/normalize.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lykmapipo/themify-icons@0.1.2/css/themify-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pixeden-stroke-7-icon@1.2.3/pe-icon-7-stroke/dist/pe-icon-7-stroke.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.0/css/flag-icon.min.css">
+    <link rel="stylesheet" href="{% static 'css/cs-skin-elastic.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+</head>
+
+<body>
+    <!-- Left Panel -->
+    <aside id="left-panel" class="left-panel">
+        <nav class="navbar navbar-expand-sm navbar-default">
+            <div id="main-menu" class="main-menu">
+                <ul class="nav navbar-nav">
+                    <li class="active">
+                        <a href="{% url 'index' %}"><i class="menu-icon fa fa-laptop"></i>Inicio</a>
+                    </li>
+                    <li class="menu-item-has-children dropdown">
+                       <a href="" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-users"></i>Autores</a>
+                       <ul class="sub-menu children dropdown-menu">
+                           <li><i class="fa fa-pencil"></i><a href="{% url 'libro:crear_autor' %}">Registro de Autores</a></li>
+                           <li><i class="fa fa-table"></i><a href="{% url 'libro:listar_autor' %}">Listado de Autores</a></li>
+                       </ul>
+                    </li>
+                    <li class="menu-item-has-children dropdown">
+                       <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-book"></i>Libros</a>
+                       <ul class="sub-menu children dropdown-menu">
+                           <li><i class="fa fa-pencil"></i><a href="tables-basic.html">Registro de Libros</a></li>
+                           <li><i class="fa fa-table"></i><a href="tables-data.html">Listado de Libros</a></li>
+                       </ul>
+                    </li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </nav>
+    </aside>
+    <!-- /#left-panel -->
+    <!-- Right Panel -->
+    <div id="right-panel" class="right-panel">
+        <!-- Header-->
+        <header id="header" class="header">
+            <div class="top-left">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="./"><img src="{% static 'images/logo.png' %}" alt="Logo"></a>
+                    <a class="navbar-brand hidden" href="./"><img src="{% static 'images/logo.png' %}" alt="Logo"></a>
+                    <a id="menuToggle" class="menutoggle"><i class="fa fa-bars"></i></a>
+                </div>
+            </div>
+            <div class="top-right">
+                <div class="header-menu">
+                    <div class="user-area dropdown float-right">
+                        <a href="#" class="dropdown-toggle active" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img class="user-avatar rounded-circle" src="{% static 'images/admin.png' %}" alt="User Avatar">
+                        </a>
+                        <div class="user-menu dropdown-menu">
+                            <a class="nav-link" href="#"><i class="fa fa- user"></i>Perfil</a>
+                            <a class="nav-link" href="#"><i class="fa fa -cog"></i>Administración</a>
+                            <a class="nav-link" href="#"><i class="fa fa-power -off"></i>Logout</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </header>
+
+        <div class="content">
+            <div class="animated fadeIn">
+                <div class="row">
+                    <div class="col-lg-12">
+                      {% block body %}
+                        <div class="col-md-12 prueba">
+                            <div class="card bg-primary">
+                                <div class="card-body">
+                                    <blockquote class="blockquote mb-0 text-light text-center">
+                                        <h1 class="text-light">BIENVENIDOS A BIBLIOTECA.DEV</h1>
+                                        <footer class="blockquote-footer text-light">"Google puede darte 100.00 respuestas, el Bibliotecario puede darte la correcta." -<cite title="Neil Gaiman">Neil Gaiman</cite></footer>
+                                    </blockquote>
+                                </div>
+                            </div>
+                        </div>
+                      {% endblock body %}
+                </div>
+            </div>
+        </div>
+        <!-- /.content -->
+        <div class="clearfix"></div>
+        <!-- Footer -->
+        <footer class="site-footer">
+            <div class="footer-inner bg-white">
+                <div class="row">
+                    <div class="col-sm-6">
+                        Copyright &copy; 2018 Ela Admin
+                    </div>
+                    <div class="col-sm-6 text-right">
+                        Designed by <a href="https://colorlib.com">Colorlib</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- /.site-footer -->
+    </div>
+    <!-- /#right-panel -->
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@2.2.4/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.4/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-match-height@0.7.2/dist/jquery.matchHeight.min.js"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+
+</body>
+</html>
