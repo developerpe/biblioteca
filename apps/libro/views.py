@@ -23,6 +23,7 @@ class ListadoAutor(ListView):
     context_object_name = 'autores'
     queryset = Autor.objects.filter(estado = True)
 
+
 class ActualizarAutor(UpdateView):
     model = Autor
     form_class = AutorForm
@@ -36,7 +37,7 @@ class CrearAutor(CreateView):
     success_url = reverse_lazy('libro:listar_autor')
 
 class EliminarAutor(DeleteView):
-    model = Autor   
+    model = Autor
 
     def post(self,request,pk,*args,**kwargs):
         object = Autor.objects.get(id = pk)
