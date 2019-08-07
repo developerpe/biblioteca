@@ -67,7 +67,7 @@
                         <div class="user-menu dropdown-menu">
                             <a class="nav-link" href="#"><i class="fa fa- user"></i>Perfil</a>
                             <a class="nav-link" href="#"><i class="fa fa -cog"></i>Administración</a>
-                            <a class="nav-link" href="#"><i class="fa fa-power -off"></i>Logout</a>
+                            <a class="nav-link" href="{% url 'logout' %}"><i class="fa fa-power -off"></i>Logout</a>
                         </div>
                     </div>
 
@@ -84,7 +84,7 @@
                             <div class="card bg-primary">
                                 <div class="card-body">
                                     <blockquote class="blockquote mb-0 text-light text-center">
-                                        <h1 class="text-light">BIENVENIDOS A BIBLIOTECA.DEV</h1>
+                                        <h1 class="text-light">{{ user.username | upper }} BIENVENIDO A BIBLIOTECA.DEV</h1>
                                         <footer class="blockquote-footer text-light">"Google puede darte 100.00 respuestas, el Bibliotecario puede darte la correcta." -<cite title="Neil Gaiman">Neil Gaiman</cite></footer>
                                     </blockquote>
                                 </div>
