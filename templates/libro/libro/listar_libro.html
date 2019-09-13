@@ -1,0 +1,50 @@
+{% extends 'index.html' %}
+
+{% block titulo %}
+  Biblioteca.dev | Listado de Libros
+{% endblock titulo %}
+
+{% block body %}
+
+  {% if object_list %}
+      <div class="card">
+          <div class="card-header">
+              <strong class="card-title">Listado de Libros</strong>
+          </div>
+          <div class="table-stats order-table ov-h">
+              <table class="table">
+                  <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Titulo</th>
+                        <th>Autor</th>
+                        <th>Fecha de Publicación</th>
+                        <th>Opciones</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                    {% for libro in object_list %}
+                      <tr>
+                        <td>{{ libro.id }}</td>
+                        <td>{{ libro.titulo }}</td>
+                        <td>
+                          {% for autor in libro.autor_id.all %}
+                              <li>{{ autor.nombre }}</li>
+                          {% endfor %}
+                        </td>
+                        <td>{{ libro.fecha_publicacion }}</td>
+                        <td>
+                          <a href="{% url 'libro:editar_libro' libro.id %}" class="btn btn-primary">Editar</a>
+                          <a href="{% url 'libro:eliminar_libro' libro.id %}" class="btn btn-danger">Eliminar</a>
+                        </td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+              </table>
+          </div>
+      </div>
+      {% else %}
+        <h1>No existen libros registrados</h1>
+      {% endif %}
+
+{% endblock body %}

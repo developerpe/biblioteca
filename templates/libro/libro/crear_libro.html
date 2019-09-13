@@ -1,0 +1,20 @@
+{% extends 'index.html' %}
+{% block titulo %}
+  Biblioteca.dev | Registro de Libros
+{% endblock titulo %}
+
+{% block body %}
+<form method="POST">
+  {% csrf_token %}
+  <div class="card">
+      <div class="card-header">
+          <strong>Formulario de Registro</strong>
+      </div>
+      <div class="card-body card-block">
+        {{ form.as_p }}
+      </div>
+  </div>
+  <button type="submit" class="btn btn-success">Registrar</button>
+</form>
+
+{% endblock body %}
