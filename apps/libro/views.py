@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect
 from django.core.exceptions import ObjectDoesNotExist
-from django.views.generic import TemplateView,ListView,UpdateView,CreateView,DeleteView
+from django.views.generic import View,TemplateView,ListView,UpdateView,CreateView,DeleteView
 from django.urls import reverse_lazy
 from .forms import AutorForm,LibroForm
 from .models import Autor,Libro
@@ -37,22 +37,40 @@ class EliminarAutor(DeleteView):
         object.save()
         return redirect('libro:listar_autor')
 
-class ListadoLibros(ListView):
-    model = Libro
-    template_name = 'libro/libro/listar_libro.html' # queryset = Libro.objects.all()
-    queryset = Libro.objects.filter(estado = True)
-
-class CrearLibro(CreateView):
+class ListadoLibros(View):
     model = Libro
     form_class = LibroForm
-    template_name = 'libro/libro/crear_libro.html'
-    success_url = reverse_lazy('libro:listado_libros')
+    template_name = 'libro/libro/listar_libro.html'
+
+    def get_queryset(self):
+        return self.model.objects.filter(estado = True)
+
+    def get_context_data(self,**kwargs):
+        contexto = {}
+        contexto['libros'] = self.get_queryset()
+        contexto['form'] = self.form_class
+        return contexto
+
+    def get(self,request,*args,**kwargs):
+        return render(request,self.template_name,self.get_context_data())
+
+    def post(self,request,*args,**kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('libro:listado_libros')
+
 
 class ActualizarLibro(UpdateView):
     model = Libro
     form_class = LibroForm
-    template_name = 'libro/libro/crear_libro.html'
+    template_name = 'libro/libro/listar_libro.html'
     success_url = reverse_lazy('libro:listado_libros')
+
+    def get_context_data(self,**kwargs):
+        context = super().get_context_data(**kwargs)
+        context['libros'] = Libro.objects.filter(estado = True)
+        return context
 
 class EliminarLibro(DeleteView):
     model = Libro

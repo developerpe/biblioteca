@@ -6,7 +6,7 @@
 
 {% block body %}
 
-  {% if object_list %}
+  {% if libros %}
       <div class="card">
           <div class="card-header">
               <strong class="card-title">Listado de Libros</strong>
@@ -23,7 +23,7 @@
                       </tr>
                   </thead>
                   <tbody>
-                    {% for libro in object_list %}
+                    {% for libro in libros %}
                       <tr>
                         <td>{{ libro.id }}</td>
                         <td>{{ libro.titulo }}</td>
@@ -46,5 +46,17 @@
       {% else %}
         <h1>No existen libros registrados</h1>
       {% endif %}
+      <form method="POST" >
+        {% csrf_token %}
+        <div class="card">
+            <div class="card-header">
+                <strong>Formulario de Registro</strong>
+            </div>
+            <div class="card-body card-block">
+              {{ form.as_p }}
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success">Registrar</button>
+      </form>
 
 {% endblock body %}
