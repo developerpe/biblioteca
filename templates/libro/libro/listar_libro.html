@@ -1,62 +1,56 @@
 {% extends 'index.html' %}
 
 {% block titulo %}
-  Biblioteca.dev | Listado de Libros
+Biblioteca.dev | Listado de Libros
 {% endblock titulo %}
 
 {% block body %}
+{% if libros %}
+<div class="card">
+  <div class="card-header">
+    <strong class="card-title">Listado de Libros</strong>
+  </div>
+  <div class="table-stats order-table ov-h">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Titulo</th>
+          <th>Autor</th>
+          <th>Fecha de Publicación</th>
+          <th>Opciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for libro in libros %}
+        <tr>
+          <td>{{ libro.id }}</td>
+          <td>{{ libro.titulo }}</td>
+          <td>
+            {% for autor in libro.autor_id.all %}
+            <li>{{ autor.nombre }}</li>
+            {% endfor %}
+          </td>
+          <td>{{ libro.fecha_publicacion }}</td>
+          <td>
+            <a href="{% url 'libro:eliminar_libro' libro.id %}" class="btn btn-danger">Eliminar</a>
+            <a href="{% url 'libro:editar_libro' libro.id %}" class="btn btn-primary">Editar</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% else %}
+<h1>No existen libros registrados</h1>
+{% endif %}
 
-  {% if libros %}
-      <div class="card">
-          <div class="card-header">
-              <strong class="card-title">Listado de Libros</strong>
-          </div>
-          <div class="table-stats order-table ov-h">
-              <table class="table">
-                  <thead>
-                      <tr>
-                        <th>ID</th>
-                        <th>Titulo</th>
-                        <th>Autor</th>
-                        <th>Fecha de Publicación</th>
-                        <th>Opciones</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                    {% for libro in libros %}
-                      <tr>
-                        <td>{{ libro.id }}</td>
-                        <td>{{ libro.titulo }}</td>
-                        <td>
-                          {% for autor in libro.autor_id.all %}
-                              <li>{{ autor.nombre }}</li>
-                          {% endfor %}
-                        </td>
-                        <td>{{ libro.fecha_publicacion }}</td>
-                        <td>
-                          <a href="{% url 'libro:editar_libro' libro.id %}" class="btn btn-primary">Editar</a>
-                          <a href="{% url 'libro:eliminar_libro' libro.id %}" class="btn btn-danger">Eliminar</a>
-                        </td>
-                      </tr>
-                    {% endfor %}
-                  </tbody>
-              </table>
-          </div>
-      </div>
-      {% else %}
-        <h1>No existen libros registrados</h1>
-      {% endif %}
-      <form method="POST" >
-        {% csrf_token %}
-        <div class="card">
-            <div class="card-header">
-                <strong>Formulario de Registro</strong>
-            </div>
-            <div class="card-body card-block">
-              {{ form.as_p }}
-            </div>
-        </div>
-        <button type="submit" class="btn btn-success">Registrar</button>
-      </form>
+<form method="POST">
+  {% csrf_token %}
+    {{ form.as_p }}
+    <button type="button" class="btn btn-danger">Cancelar</button>
+    <button type="submit" class="btn btn-primary">Confirmar</button>
+</form>
 
 {% endblock body %}

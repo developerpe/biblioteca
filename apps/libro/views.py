@@ -37,6 +37,7 @@ class EliminarAutor(DeleteView):
         object.save()
         return redirect('libro:listar_autor')
 
+
 class ListadoLibros(View):
     model = Libro
     form_class = LibroForm
@@ -53,18 +54,21 @@ class ListadoLibros(View):
 
     def get(self,request,*args,**kwargs):
         return render(request,self.template_name,self.get_context_data())
-
+    
     def post(self,request,*args,**kwargs):
         form = self.form_class(request.POST)
         if form.is_valid():
             form.save()
             return redirect('libro:listado_libros')
+        else:
+            form = self.form_class()
+            return render(request,self.template_name,self.get_context_data())
 
 
 class ActualizarLibro(UpdateView):
     model = Libro
     form_class = LibroForm
-    template_name = 'libro/libro/listar_libro.html'
+    template_name = 'libro/libro/crear_libro.html'
     success_url = reverse_lazy('libro:listado_libros')
 
     def get_context_data(self,**kwargs):
