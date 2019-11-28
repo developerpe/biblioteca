@@ -5,6 +5,9 @@ Biblioteca.dev | Listado de Libros
 {% endblock titulo %}
 
 {% block body %}
+<div>
+  <button class="btn btn-primary" type="button" onclick="abrir_modal_creacion('{% url 'libro:crear_libro' %}')">Crear Libro</button>
+</div>
 {% if libros %}
 <div class="card">
   <div class="card-header">
@@ -34,7 +37,7 @@ Biblioteca.dev | Listado de Libros
           <td>{{ libro.fecha_publicacion }}</td>
           <td>
             <a href="{% url 'libro:eliminar_libro' libro.id %}" class="btn btn-danger">Eliminar</a>
-            <a href="{% url 'libro:editar_libro' libro.id %}" class="btn btn-primary">Editar</a>
+            <button onclick="abrir_modal_edicion('{% url 'libro:editar_libro' libro.id %}')" class="btn btn-primary">Editar</button>
           </td>
         </tr>
         {% endfor %}
@@ -46,11 +49,28 @@ Biblioteca.dev | Listado de Libros
 <h1>No existen libros registrados</h1>
 {% endif %}
 
-<form method="POST">
-  {% csrf_token %}
-    {{ form.as_p }}
-    <button type="button" class="btn btn-danger">Cancelar</button>
-    <button type="submit" class="btn btn-primary">Confirmar</button>
-</form>
+<div class="modal fade" id="creacion" role="dialog">
+
+</div>
+
+<div class="modal fade" id="edicion" role="dialog">
+
+</div>
 
 {% endblock body %}
+
+{% block extrajs %}
+<script type="text/javascript">
+  var $ = jQuery.noConflict();
+  function abrir_modal_edicion(url){
+    $('#edicion').load(url, function (){
+      $(this).modal('show');
+    });
+  }
+  function abrir_modal_creacion(url){
+    $('#creacion').load(url,function(){
+      $(this).modal('show');
+    });
+  }
+</script>
+{% endblock extrajs %}
