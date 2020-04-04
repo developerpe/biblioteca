@@ -5,7 +5,10 @@
 {% endblock titulo %}
 
 {% block body %}
-
+<div>
+  <button class="btn btn-primary" type="button" onclick="abrir_modal_creacion('{% url 'libro:crear_autor' %}')">Crear
+    Autor</button>
+</div>
   {% if autores %}
       <div class="card">
           <div class="card-header">
@@ -31,8 +34,8 @@
                         <td>{{ autor.apellidos }}</td>
                         <td>{{ autor.nacionalidad }}</td>
                         <td>{{ autor.descripcion }}</td>
-                        <td>
-                          <a href="{% url 'libro:editar_autor' autor.id %}" class="btn btn-primary">Editar</a>
+                        <td>                          
+                          <button onclick="abrir_modal_edicion('{% url 'libro:editar_autor' autor.id %}')" class="btn btn-primary">Editar</button>
                           <a href="{% url 'libro:eliminar_autor' autor.id %}" class="btn btn-danger">Eliminar</a>
                         </td>
                       </tr>
@@ -44,5 +47,27 @@
       {% else %}
         <h1>No existen autores registrados</h1>
       {% endif %}
+<div class="modal fade" id="creacion" role="dialog">
+
+</div>
+
+<div class="modal fade" id="edicion" role="dialog">
+
+</div>
 
 {% endblock body %}
+{% block extrajs %}
+<script type="text/javascript">
+  var $ = jQuery.noConflict();
+  function abrir_modal_edicion(url) {
+    $('#edicion').load(url, function () {
+      $(this).modal('show');
+    });
+  }
+  function abrir_modal_creacion(url) {
+    $('#creacion').load(url, function () {
+      $(this).modal('show');
+    });
+  }
+</script>
+{% endblock extrajs %}

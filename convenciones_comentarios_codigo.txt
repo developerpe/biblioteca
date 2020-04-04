@@ -1,0 +1,55 @@
+
+
+PEP 257
+
+
+    def get_queryset(self):
+        """Retorna la consulta a utilizar en toda la clase"""
+        return self.model.objects.filter(estado=True)
+
+    def get_queryset(self,request):
+        """Retorna una consulta a utilizarse en la clase
+
+
+        Argumentos:
+        request:    la peticion enviada del navegador
+
+        """
+        return self.model.objects.filter(estado=True)
+
+
+SPHINX
+
+    def get_queryset(self,request):
+        """Retorna una consulta a utilizarse en la clase.
+        Esta funcion se encuentra en toda vista basada en  clase, se utiliza internamente por django para
+        generar las consultas de a cuerdo a los valores que se definen en la clase, valores como MODEL,FORM_CLASS
+
+
+        :parámetro request: petición enviada del navegador
+        :type request: dict
+        :return: una consulta
+        :rtype: Queryset
+        """
+
+
+        return self.model.objects.filter(estado=True)
+
+GOOGLE PYTHON
+
+    def get_queryset(self,request):
+        """Retorna una consulta a utilizarse en la clase.
+        Esta funcion se encuentra en toda vista basada en  clase, se utiliza internamente por django para
+        generar las consultas de a cuerdo a los valores que se definen en la clase, valores como MODEL, FORM_CLASS
+
+        Argumentos:
+            request: peticion enviada del navegador
+
+
+        Returns:
+            Una consulta
+        """
+
+
+        return self.model.objects.filter(estado=True)
+
