@@ -1,0 +1,23 @@
+{% extends 'index.html' %}
+
+{% block titulo %}
+Biblioteca.dev | Registro de Usuarios
+{% endblock titulo %}
+
+{% block body %}
+<div class="card">
+    <div class="card-header">
+        <strong class="card-title">Registro de Usuarios</strong>
+    </div>
+    <div class="card-body">
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="">
+                <a href="{% url 'usuarios:listar_usuarios' %}" class="btn btn-danger">CANCELAR</a>
+                <button class="btn btn-primary" type="submit">REGISTRAR</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock body %}
