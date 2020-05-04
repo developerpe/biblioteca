@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
@@ -43,4 +43,18 @@ class RegistrarUsuario(CreateView):
     model = Usuario
     form_class = FormularioUsuario
     template_name = 'usuarios/crear_usuario.html'
-    success_url = reverse_lazy('usuarios:listar_usuarios')
+
+    def post(self,request,*args,**kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            nuevo_usuario = Usuario(
+                email = form.cleaned_data.get('email'),
+                username = form.cleaned_data.get('username'),
+                nombres = form.cleaned_data.get('nombres'),
+                apellidos = form.cleaned_data.get('apellidos')
+            )
+            nuevo_usuario.set_password(form.cleaned_data.get('password1'))
+            nuevo_usuario.save()
+            return redirect('usuarios:listar_usuarios')
+        else:
+            return render(request,self.template_name,{'form':form})
