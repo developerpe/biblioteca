@@ -1,46 +1,52 @@
 {% extends 'index.html' %}
+{% load staticfiles %}
 
 {% block titulo %}
 Biblioteca.dev | Listado de Usuarios
 {% endblock titulo %}
-
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/lib/datatable/dataTables.bootstrap.min.css' %}">
+{% endblock extra_css %}
 {% block body %}
-{% if object_list %}
 <div class="card">
-    <div class="card-header">
-        <strong class="card-title">Listado de Usuarios</strong>
+    <div class="card-header">        
+        <div class="row">
+            <div class="col-md-8">
+                <strong class="card-title">Listado de Usuarios</strong>
+            </div>
+            <div class="col-md-4">
+                <button class="btn btn-primary" type="button">AGREGAR USUARIO</button>
+            </div>            
+        </div>
     </div>
     <div class="table-stats order-table ov-h">
-        <table class="table">
+        <table id = "tabla_usuarios" class="table" >
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>#</th>
                     <th>Username</th>
                     <th>Nombres</th>
                     <th>Apellidos</th>
                     <th>Opciones</th>
                 </tr>
             </thead>
-            <tbody>
-                {% for usuario in object_list %}
-                <tr>
-                    <td>{{ usuario.id }}</td>
-                    <td>{{ usuario.username }}</td>
-                    <td>
-                        {{ usuario.nombres }}
-                    </td> 
-                    <td>{{ usuario.apellidos }}</td>
-                    <td>
-                        <a href="" class="btn btn-danger">Eliminar</a>
-                        <a href=""  class="btn btn-primary">Editar</a>
-                    </td>
-                </tr>
-                {% endfor %}
+            <tbody>                
             </tbody>
         </table>
     </div>
 </div>
-{% else %}
-<h1>No existen usuarios registrados</h1>
-{% endif %}
 {% endblock body %}
+
+{% block extrajs %}
+    <script src="{% static 'js/lib/data-table/datatables.min.js' %}"></script>
+    <script src="{% static 'js/lib/data-table/dataTables.bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/lib/data-table/dataTables.buttons.min.js' %}"></script>
+    <script src="{% static 'js/lib/data-table/buttons.bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/lib/data-table/jszip.min.js' %}"></script>
+    <script src="{% static 'js/lib/data-table/vfs_fonts.js' %}"></script>
+    <script src="{% static 'js/lib/data-table/buttons.html5.min.js' %}"></script>
+    <script src="{% static 'js/lib/data-table/buttons.print.min.js' %}"></script>
+    <script src="{% static 'js/lib/data-table/buttons.colVis.min.js' %}"></script>
+    <script src="{% static 'js/init/datatables-init.js' %}"></script>
+    <script src="{% static 'js/usuarios/index.js' %}"></script>
+{% endblock extrajs %}

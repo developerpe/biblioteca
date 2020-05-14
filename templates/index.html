@@ -16,7 +16,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.0/css/flag-icon.min.css">
     <link rel="stylesheet" href="{% static 'css/cs-skin-elastic.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-
+    {% block extra_css %}
+    {% endblock extra_css %}
 </head>
 
 <body>
@@ -33,7 +34,7 @@
                         <a href="" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i
                                 class="menu-icon fa fa-users"></i>Usuarios</a>
                         <ul class="sub-menu children dropdown-menu">
-                            <li><i class="fa fa-table"></i><a href="{% url 'usuarios:listar_usuarios' %}">Listado de Usuarios</a></li>
+                            <li><i class="fa fa-table"></i><a href="{% url 'usuarios:inicio_usuarios' %}">Listado de Usuarios</a></li>
                             <li><i class="fa fa-table"></i><a href="{% url 'usuarios:registrar_usuario' %}">Registro de Usuarios</a></li>
                         </ul>
                     </li>
@@ -128,6 +129,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery-match-height@0.7.2/dist/jquery.matchHeight.min.js"></script>
     <script src="{% static 'js/main.js' %}"></script>
+    <script type="text/javascript">
+        var $ = jQuery.noConflict();
+    </script>
     {% block extrajs %}
     {% endblock extrajs %}
 </body>
