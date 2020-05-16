@@ -5,7 +5,7 @@
 Biblioteca.dev | Listado de Usuarios
 {% endblock titulo %}
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/lib/datatable/dataTables.bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/lib/datatable/dataTables.bootstrap.min.css' %}">
 {% endblock extra_css %}
 {% block body %}
 <div class="card">
@@ -15,7 +15,7 @@ Biblioteca.dev | Listado de Usuarios
                 <strong class="card-title">Listado de Usuarios</strong>
             </div>
             <div class="col-md-4">
-                <button class="btn btn-primary" type="button">AGREGAR USUARIO</button>
+                <button class="btn btn-primary" onclick="abrir_modal_creacion('{% url 'usuarios:registrar_usuario' %}');" type="button">AGREGAR USUARIO</button>
             </div>            
         </div>
     </div>
@@ -35,18 +35,15 @@ Biblioteca.dev | Listado de Usuarios
         </table>
     </div>
 </div>
+<div id="creacion" class="modal fade" role="dialog">
+
+</div>
+
 {% endblock body %}
 
 {% block extrajs %}
-    <script src="{% static 'js/lib/data-table/datatables.min.js' %}"></script>
-    <script src="{% static 'js/lib/data-table/dataTables.bootstrap.min.js' %}"></script>
-    <script src="{% static 'js/lib/data-table/dataTables.buttons.min.js' %}"></script>
-    <script src="{% static 'js/lib/data-table/buttons.bootstrap.min.js' %}"></script>
-    <script src="{% static 'js/lib/data-table/jszip.min.js' %}"></script>
-    <script src="{% static 'js/lib/data-table/vfs_fonts.js' %}"></script>
-    <script src="{% static 'js/lib/data-table/buttons.html5.min.js' %}"></script>
-    <script src="{% static 'js/lib/data-table/buttons.print.min.js' %}"></script>
-    <script src="{% static 'js/lib/data-table/buttons.colVis.min.js' %}"></script>
-    <script src="{% static 'js/init/datatables-init.js' %}"></script>
+    <script src="http://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <script src="{% static 'js/lib/data-table/dataTables.bootstrap.min.js' %}"></script>    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <script src="{% static 'js/usuarios/index.js' %}"></script>
 {% endblock extrajs %}

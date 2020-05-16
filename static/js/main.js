@@ -85,6 +85,74 @@ jQuery(document).ready(function($) {
 		} 
 		
 	});
-  
+
  
 });
+function abrir_modal_edicion(url) {
+	$('#edicion').load(url, function () {
+		$(this).modal('show');
+	});
+}
+function abrir_modal_creacion(url) {
+	$('#creacion').load(url, function () {
+		$(this).modal('show');
+	});
+}
+
+function cerrar_modal_edicion(){
+	$('#edicion').modal('hide');
+}
+function cerrar_modal_creacion() {
+	$('#creacion').modal('hide');
+}
+function activarBoton() {
+	if($('#boton_creacion').prop('disabled')){
+		$('#boton_creacion').prop('disabled',false);
+	}else{
+		$('#boton_creacion').prop('disabled', true);
+	}
+}
+
+function mostrarErroresCreacion(errores){
+	$('#errores_creacion').html("");
+	let error = "";
+	for (let item in errores.responseJSON.error){
+		error += '<div class = "alert alert-danger" <strong>' + errores.responseJSON.error[item] + '</strong></div>'
+	}
+	$('#errores_creacion').append(error);
+}
+
+function notificacionError(mensaje){
+	Swal.fire({
+		title: 'Error!',
+		text: mensaje,
+		icon: 'error'
+	})
+}
+
+function notificacionSuccess(mensaje) {
+	Swal.fire({
+		title: 'Buen Trabajo!',
+		text: mensaje,
+		icon: 'success'
+	})
+}
+
+function registrar(funcion_listado) {
+	activarBoton();
+	$.ajax({
+		data: $('#form_creacion').serialize(),
+		url: $('#form_creacion').attr('action'),
+		type: $('#form_creacion').attr('method'),
+		success: function (response) {
+			notificacionSuccess(response.mensaje);
+			funcion_listado;
+			cerrar_modal_creacion();
+		},
+		error: function (response) {
+			activarBoton();
+			notificacionError(response.responseJSON.mensaje);
+			mostrarErroresCreacion(response);
+		}
+	});
+}

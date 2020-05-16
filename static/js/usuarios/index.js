@@ -14,9 +14,9 @@ function listadoUsuarios(){
                 fila += '<td>' + response[i]["fields"]['username'] + '</td>';
                 fila += '<td>' + response[i]["fields"]['nombres'] + '</td>';
                 fila += '<td>' + response[i]["fields"]['apellidos'] + '</td>';
-                fila += '<td><button> EDITAR </button> <button> ELIMINAR </button><td>';
+                fila += '<td><button> EDITAR </button> <button> ELIMINAR </button></td>';
                 fila += '</tr>';
-                $('#tabla_usuarios tbody').append(fila);
+                $("#tabla_usuarios tbody").append(fila);
             }
             $("#tabla_usuarios").DataTable({
                 language: {

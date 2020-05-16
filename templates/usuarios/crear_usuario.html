@@ -1,23 +1,23 @@
-{% extends 'index.html' %}
-
-{% block titulo %}
-Biblioteca.dev | Registro de Usuarios
-{% endblock titulo %}
-
-{% block body %}
-<div class="card">
-    <div class="card-header">
-        <strong class="card-title">Registro de Usuarios</strong>
-    </div>
-    <div class="card-body">
-        <form method="POST">
+<div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="modal-title">Creacion de Usuarios</h2>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <form id="form_creacion" action="{% url 'usuarios:registrar_usuario' %}" method="POST">
             {% csrf_token %}
-            {{ form.as_p }}
-            <div class="">
-                <a href="{% url 'usuarios:listar_usuarios' %}" class="btn btn-danger">CANCELAR</a>
-                <button class="btn btn-primary" type="submit">REGISTRAR</button>
+            <div id="errores_creacion">
+
+            </div>
+            <div class="modal-body">
+                {{ form.as_p }}
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="cerrar_modal_creacion();" class="btn btn-danger">CANCELAR</button>
+                <button id="boton_creacion" onclick="registrar(listadoUsuarios());" class="btn btn-primary" type="button">Confirmar</button>
             </div>
         </form>
     </div>
 </div>
-{% endblock body %}
