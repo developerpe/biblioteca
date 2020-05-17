@@ -1,24 +1,25 @@
 function listadoUsuarios(){
     $.ajax({
         url: "/usuarios/listado_usuarios/",
-        type: "get",
+        type:"get",
         dataType: "json",
         success: function(response){
             if($.fn.DataTable.isDataTable('#tabla_usuarios')){
                 $('#tabla_usuarios').DataTable().destroy();
             }
-            $("#tabla_usuarios tbody").html("");
-            for(let i = 0; i  < response.length;i++){
-                let fila = '<tr class = "text-center">';
-                fila += '<td>' + (i + 1) + '</td>';
+            $('#tabla_usuarios tbody').html("");
+            for(let i = 0;i < response.length;i++){
+                let fila = '<tr>';
+                fila += '<td>' + (i +1 ) + '</td>';
                 fila += '<td>' + response[i]["fields"]['username'] + '</td>';
                 fila += '<td>' + response[i]["fields"]['nombres'] + '</td>';
                 fila += '<td>' + response[i]["fields"]['apellidos'] + '</td>';
-                fila += '<td><button> EDITAR </button> <button> ELIMINAR </button></td>';
+                fila += '<td>' + response[i]["fields"]['email'] + '</td>';
+                fila += '<td><button> EDITAR </button><button> ELIMINAR </buttton></td>';
                 fila += '</tr>';
-                $("#tabla_usuarios tbody").append(fila);
+                $('#tabla_usuarios tbody').append(fila);
             }
-            $("#tabla_usuarios").DataTable({
+            $('#tabla_usuarios').DataTable({
                 language: {
                     "decimal": "",
                     "emptyTable": "No hay información",
@@ -40,10 +41,30 @@ function listadoUsuarios(){
                     },
                 },
             });
+        },
+        error: function(error){
+            console.log(error);
         }
-    })
+    });
 }
-
-$(document).ready(function(){    
+function registrar() {
+    activarBoton();
+    $.ajax({
+        data: $('#form_creacion').serialize(),
+        url: $('#form_creacion').attr('action'),
+        type: $('#form_creacion').attr('method'),
+        success: function (response) {
+            notificacionSuccess(response.mensaje);
+            listadoUsuarios();
+            cerrar_modal_creacion();
+        },
+        error: function (error) {
+            notificacionError(error.responseJSON.mensaje);
+            mostrarErroresCreacion(error);
+            activarBoton();
+        }
+    });
+}
+$(document).ready(function (){
     listadoUsuarios();
 });

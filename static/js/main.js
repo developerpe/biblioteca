@@ -1,4 +1,4 @@
-$.noConflict();
+var $ = jQuery.noConflict();
 
 jQuery(document).ready(function($) {
 
@@ -98,14 +98,15 @@ function abrir_modal_creacion(url) {
 		$(this).modal('show');
 	});
 }
-
-function cerrar_modal_edicion(){
-	$('#edicion').modal('hide');
-}
-function cerrar_modal_creacion() {
+function cerrar_modal_creacion(){
 	$('#creacion').modal('hide');
 }
-function activarBoton() {
+
+function cerrar_modal_edicion() {
+	$('#edicion').modal('hide');
+}
+
+function activarBoton(){
 	if($('#boton_creacion').prop('disabled')){
 		$('#boton_creacion').prop('disabled',false);
 	}else{
@@ -114,12 +115,12 @@ function activarBoton() {
 }
 
 function mostrarErroresCreacion(errores){
-	$('#errores_creacion').html("");
+	$('#errores').html("");
 	let error = "";
-	for (let item in errores.responseJSON.error){
-		error += '<div class = "alert alert-danger" <strong>' + errores.responseJSON.error[item] + '</strong></div>'
+	for(let item in errores.responseJSON.error){
+		error += '<div class = "alert alert-danger" <strong>' + errores.responseJSON.error[item] + '</strong></div>';
 	}
-	$('#errores_creacion').append(error);
+	$('#errores').append(error);
 }
 
 function notificacionError(mensaje){
@@ -136,23 +137,4 @@ function notificacionSuccess(mensaje) {
 		text: mensaje,
 		icon: 'success'
 	})
-}
-
-function registrar(funcion_listado) {
-	activarBoton();
-	$.ajax({
-		data: $('#form_creacion').serialize(),
-		url: $('#form_creacion').attr('action'),
-		type: $('#form_creacion').attr('method'),
-		success: function (response) {
-			notificacionSuccess(response.mensaje);
-			funcion_listado;
-			cerrar_modal_creacion();
-		},
-		error: function (response) {
-			activarBoton();
-			notificacionError(response.responseJSON.mensaje);
-			mostrarErroresCreacion(response);
-		}
-	});
 }

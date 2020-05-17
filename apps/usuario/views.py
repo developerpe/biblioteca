@@ -1,7 +1,7 @@
 import json
-from django.core.serializers import serialize
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
+from django.core.serializers import serialize
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
@@ -35,17 +35,16 @@ def logoutUsuario(request):
     logout(request)
     return HttpResponseRedirect('/accounts/login/')
 
-
 class ListadoUsuario(ListView):
     model = Usuario    
 
     def get_queryset(self):
         return self.model.objects.filter(usuario_activo=True)
-
-    def get(self, request, *args, **kwargs):
+    
+    def get(self,request,*args,**kwargs):
         if request.is_ajax():
-            data = serialize('json',self.get_queryset())
-            return HttpResponse(data,'application/json')
+            print(self.args)
+            return HttpResponse(serialize('json', self.get_queryset()), 'application/json')
         else:
             return redirect('usuarios:inicio_usuarios')
 
@@ -67,7 +66,7 @@ class RegistrarUsuario(CreateView):
                 nuevo_usuario.set_password(form.cleaned_data.get('password1'))
                 nuevo_usuario.save()
                 mensaje = f'{self.model.__name__} registrado correctamente!'
-                error = 'No hay error'
+                error = 'No hay error!'
                 response = JsonResponse({'mensaje':mensaje,'error':error})
                 response.status_code = 201
                 return response

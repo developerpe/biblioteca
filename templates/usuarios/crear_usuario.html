@@ -8,15 +8,15 @@
         </div>
         <form id="form_creacion" action="{% url 'usuarios:registrar_usuario' %}" method="POST">
             {% csrf_token %}
-            <div id="errores_creacion">
-
-            </div>
             <div class="modal-body">
+                <div id="errores">
+
+                </div>
                 {{ form.as_p }}
             </div>
             <div class="modal-footer">
-                <button type="button" onclick="cerrar_modal_creacion();" class="btn btn-danger">CANCELAR</button>
-                <button id="boton_creacion" onclick="registrar(listadoUsuarios());" class="btn btn-primary" type="button">Confirmar</button>
+                <button class="btn btn-danger" type="button" onclick="cerrar_modal_creacion();">Cancelar</button>
+                <button id="boton_creacion" class="btn btn-primary" type="button" onclick="registrar();">Confirmar</button>
             </div>
         </form>
     </div>
