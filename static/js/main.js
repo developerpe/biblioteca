@@ -98,6 +98,11 @@ function abrir_modal_creacion(url) {
 		$(this).modal('show');
 	});
 }
+function abrir_modal_eliminacion(url) {
+	$('#eliminacion').load(url, function () {
+		$(this).modal('show');
+	});
+}
 function cerrar_modal_creacion(){
 	$('#creacion').modal('hide');
 }
@@ -105,7 +110,9 @@ function cerrar_modal_creacion(){
 function cerrar_modal_edicion() {
 	$('#edicion').modal('hide');
 }
-
+function cerrar_modal_eliminacion() {
+	$('#eliminacion').modal('hide');
+}
 function activarBoton(){
 	if($('#boton_creacion').prop('disabled')){
 		$('#boton_creacion').prop('disabled',false);
@@ -121,6 +128,14 @@ function mostrarErroresCreacion(errores){
 		error += '<div class = "alert alert-danger" <strong>' + errores.responseJSON.error[item] + '</strong></div>';
 	}
 	$('#errores').append(error);
+}
+function mostrarErroresEdicion(errores) {
+	$('#erroresEdicion').html("");
+	let error = "";
+	for (let item in errores.responseJSON.error) {
+		error += '<div class = "alert alert-danger" <strong>' + errores.responseJSON.error[item] + '</strong></div>';
+	}
+	$('#erroresEdicion').append(error);
 }
 
 function notificacionError(mensaje){

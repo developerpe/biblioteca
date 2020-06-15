@@ -43,7 +43,6 @@ class ListadoUsuario(ListView):
     
     def get(self,request,*args,**kwargs):
         if request.is_ajax():
-            print(self.args)
             return HttpResponse(serialize('json', self.get_queryset()), 'application/json')
         else:
             return redirect('usuarios:inicio_usuarios')
@@ -76,5 +75,48 @@ class RegistrarUsuario(CreateView):
                 response = JsonResponse({'mensaje': mensaje, 'error': error})
                 response.status_code = 400
                 return response
+        else:
+            return redirect('usuarios:inicio_usuarios')
+
+
+class EditarUsuario(UpdateView):
+    model = Usuario
+    form_class = FormularioUsuario
+    template_name = 'usuarios/editar_usuario.html'
+
+    def post(self,request,*args,**kwargs):
+        if request.is_ajax():
+            form = self.form_class(request.POST,instance = self.get_object())
+            if form.is_valid():
+                form.save()
+                mensaje = f'{self.model.__name__} actualizado correctamente!'
+                error = 'No hay error!'
+                response = JsonResponse({'mensaje': mensaje, 'error': error})
+                response.status_code = 201
+                return response
+            else:
+                mensaje = f'{self.model.__name__} no se ha podido actualizar!'
+                error = form.errors
+                response = JsonResponse({'mensaje': mensaje, 'error': error})
+                response.status_code = 400
+                return response
+        else:
+            return redirect('usuarios:inicio_usuarios')
+
+
+class EliminarUsuario(DeleteView):
+    model = Usuario
+    template_name = 'usuarios/eliminar_usuario.html'
+
+    def delete(self,request,*args,**kwargs):
+        if request.is_ajax():
+            usuario = self.get_object()
+            usuario.usuario_activo = False
+            usuario.save()
+            mensaje = f'{self.model.__name__} eliminado correctamente!'
+            error = 'No hay error!'
+            response = JsonResponse({'mensaje': mensaje, 'error': error})
+            response.status_code = 201
+            return response
         else:
             return redirect('usuarios:inicio_usuarios')

@@ -15,7 +15,10 @@ function listadoUsuarios(){
                 fila += '<td>' + response[i]["fields"]['nombres'] + '</td>';
                 fila += '<td>' + response[i]["fields"]['apellidos'] + '</td>';
                 fila += '<td>' + response[i]["fields"]['email'] + '</td>';
-                fila += '<td><button> EDITAR </button><button> ELIMINAR </buttton></td>';
+                fila += '<td><button type = "button" class = "btn btn-primary btn-sm tableButton"';
+                fila += ' onclick = "abrir_modal_edicion(\'/usuarios/actualizar_usuario/' + response[i]['pk']+'/\');"> EDITAR </button>';
+                fila += '<button type = "button" class = "btn btn-danger tableButton  btn-sm" ';
+                fila += 'onclick = "abrir_modal_eliminacion(\'/usuarios/eliminar_usuario/' + response[i]['pk'] +'/\');"> ELIMINAR </buttton></td>';
                 fila += '</tr>';
                 $('#tabla_usuarios tbody').append(fila);
             }
@@ -62,6 +65,41 @@ function registrar() {
             notificacionError(error.responseJSON.mensaje);
             mostrarErroresCreacion(error);
             activarBoton();
+        }
+    });
+}
+function editar(){
+    activarBoton();
+    $.ajax({
+        data: $('#form_edicion').serialize(),
+        url: $('#form_edicion').attr('action'),
+        type: $('#form_edicion').attr('method'),
+        success: function (response) {
+            notificacionSuccess(response.mensaje);
+            listadoUsuarios();
+            cerrar_modal_edicion();
+        },
+        error: function (error) {
+            notificacionError(error.responseJSON.mensaje);
+            mostrarErroresEdicion(error);
+            activarBoton();
+        }
+    });
+}
+function eliminar(pk) {
+    $.ajax({
+        data:{
+            csrfmiddlewaretoken: $("[name='csrfmiddlewaretoken']").val()
+        },
+        url: '/usuarios/eliminar_usuario/'+pk+'/',
+        type: 'post',
+        success: function (response) {
+            notificacionSuccess(response.mensaje);
+            listadoUsuarios();
+            cerrar_modal_eliminacion();
+        },
+        error: function (error) {
+            notificacionError(error.responseJSON.mensaje);
         }
     });
 }
