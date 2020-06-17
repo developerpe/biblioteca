@@ -29,7 +29,7 @@
                     <li class="active">
                         <a href="{% url 'index' %}"><i class="menu-icon fa fa-laptop"></i>Inicio</a>
                     </li>
-                    {% if request.user.is_staff %}
+                    {% if request.user.is_superuser %}
                     <li class="menu-item-has-children dropdown">
                         <a href="" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i
                                 class="menu-icon fa fa-users"></i>Usuarios</a>
@@ -129,6 +129,15 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery-match-height@0.7.2/dist/jquery.matchHeight.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <script src="{% static 'js/main.js' %}"></script>
+    <script>
+        {% if messages %}
+            var html_mensaje = '';
+            {% for mensaje in messages %}
+                html_mensaje += '{{ mensaje }}';
+            {% endfor %}
+            notificacionError(html_mensaje);
+        {% endif %}
+    </script>
     {% block extrajs %}
     {% endblock extrajs %}
 </body>

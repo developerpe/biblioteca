@@ -6,14 +6,6 @@ from apps.libro.models import Autor, Libro
 from apps.libro.forms import AutorForm,LibroForm
 
 
-
-class Inicio(TemplateView):
-    """Clase que renderiza el index del sistema"""
-
-    
-    template_name = 'index.html'
-
-
 class ListadoAutor(View):
     """Contiene la lógica para el listado de autores.
 
