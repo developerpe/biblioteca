@@ -34,5 +34,9 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email','nombres']
 
+    class Meta:
+        permissions = [('permiso_desde_codigo','Este es un permiso creado desde código'),
+                        ('segundo_permiso_codigo','Segundo permiso creado desde codigo')]
+
     def __str__(self):
         return f'{self.nombres},{self.apellidos}'

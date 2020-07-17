@@ -10,9 +10,8 @@ class LoginYSuperStaffMixin(object):
                 return super().dispatch(request, *args, **kwargs)
         return redirect('index')
 
-class ValidarPermisosRequeridosUsuariosMixin(object):
-    permission_required = ('usuario.view_usuario', 'usuario.add_usuario',
-                           'usuario.delete_usuario', 'usuario.change_usuario')
+class ValidarPermisosMixin(object):
+    permission_required = ''
     url_redirect = None
 
     def get_perms(self):

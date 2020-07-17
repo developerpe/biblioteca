@@ -12,7 +12,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin,PermissionRequiredMixi
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView,TemplateView
 from apps.usuario.models import Usuario
 from apps.usuario.forms import FormularioLogin, FormularioUsuario
-from apps.usuario.mixins import LoginYSuperStaffMixin, ValidarPermisosRequeridosUsuariosMixin
+from apps.usuario.mixins import LoginYSuperStaffMixin, ValidarPermisosMixin
 
 
 class Inicio(LoginRequiredMixin,TemplateView):
@@ -44,12 +44,14 @@ def logoutUsuario(request):
     return HttpResponseRedirect('/accounts/login/')
 
 
-class InicioUsuarios(LoginYSuperStaffMixin, ValidarPermisosRequeridosUsuariosMixin, TemplateView):
+class InicioUsuarios(ValidarPermisosMixin, TemplateView):
     template_name='usuarios/listar_usuario.html'
+    permission_required = ('libro.permiso_admin',)
 
 
-class ListadoUsuario(LoginYSuperStaffMixin, ValidarPermisosRequeridosUsuariosMixin,ListView):
-    model = Usuario    
+class ListadoUsuario(ValidarPermisosMixin, ListView):
+    model = Usuario
+    permission_required = ('libro.permiso_admin',)
 
     def get_queryset(self):
         return self.model.objects.filter(is_active=True)
@@ -61,10 +63,12 @@ class ListadoUsuario(LoginYSuperStaffMixin, ValidarPermisosRequeridosUsuariosMix
             return redirect('usuarios:inicio_usuarios')
 
 
-class RegistrarUsuario(LoginYSuperStaffMixin, ValidarPermisosRequeridosUsuariosMixin, CreateView):
+class RegistrarUsuario(LoginYSuperStaffMixin, ValidarPermisosMixin, CreateView):
     model = Usuario
     form_class = FormularioUsuario
     template_name = 'usuarios/crear_usuario.html'
+    permission_required = ('usuario.view_usuario', 'usuario.add_usuario',
+                           'usuario.delete_usuario', 'usuario.change_usuario')
 
     def post(self, request, *args, **kwargs):
         if request.is_ajax():
@@ -93,10 +97,12 @@ class RegistrarUsuario(LoginYSuperStaffMixin, ValidarPermisosRequeridosUsuariosM
             return redirect('usuarios:inicio_usuarios')
 
 
-class EditarUsuario(LoginYSuperStaffMixin, ValidarPermisosRequeridosUsuariosMixin, UpdateView):
+class EditarUsuario(LoginYSuperStaffMixin, ValidarPermisosMixin, UpdateView):
     model = Usuario
     form_class = FormularioUsuario
     template_name = 'usuarios/editar_usuario.html'
+    permission_required = ('usuario.view_usuario', 'usuario.add_usuario',
+                           'usuario.delete_usuario', 'usuario.change_usuario')
 
     def post(self,request,*args,**kwargs):
         if request.is_ajax():
@@ -118,9 +124,11 @@ class EditarUsuario(LoginYSuperStaffMixin, ValidarPermisosRequeridosUsuariosMixi
             return redirect('usuarios:inicio_usuarios')
 
 
-class EliminarUsuario(LoginYSuperStaffMixin, ValidarPermisosRequeridosUsuariosMixin, DeleteView):
+class EliminarUsuario(LoginYSuperStaffMixin, ValidarPermisosMixin, DeleteView):
     model = Usuario
     template_name = 'usuarios/eliminar_usuario.html'
+    permission_required = ('usuario.view_usuario', 'usuario.add_usuario',
+                           'usuario.delete_usuario', 'usuario.change_usuario')
 
     def delete(self,request,*args,**kwargs):
         if request.is_ajax():
