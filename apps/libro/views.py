@@ -1,187 +1,203 @@
 from django.shortcuts import render,redirect
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.serializers import serialize
+from django.http import HttpResponse,JsonResponse
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import View,TemplateView,ListView,UpdateView,CreateView,DeleteView
 from django.urls import reverse_lazy
+from apps.usuario.mixins import LoginYSuperStaffMixin, ValidarPermisosMixin
 from apps.libro.models import Autor, Libro
 from apps.libro.forms import AutorForm,LibroForm
 
 
-class ListadoAutor(View):
-    """Contiene la lógica para el listado de autores.
-
-
-    :parámetro model: Modelo a utilizarse
-    :type model: Model
-    :parámetro form_class: Form de Django referente a model
-    :type form_class: DjangoForm
-    :parámetro template_name: Template a utilizarse en la clase
-    :type template_name: str
-
-    """
-
-
-    model = Autor
-    form_class = AutorForm
+class InicioAutor(LoginYSuperStaffMixin, ValidarPermisosMixin, TemplateView):
     template_name = 'libro/autor/listar_autor.html'
+    permission_required = ('libro.view_autor','libro.add_autor',
+                            'libro.delete_autor','libro.change_autor')
+
+
+class ListadoAutor(LoginYSuperStaffMixin, ValidarPermisosMixin, ListView):
+    model = Autor
+    permission_required = ('libro.view_autor', 'libro.add_autor',
+                           'libro.delete_autor', 'libro.change_autor')
 
     def get_queryset(self):
-        """Retorna una consulta a utilizarse en la clase.
-        Esta funcion se encuentra en toda vista basada en  clase, se utiliza internamente por django para
-        generar las consultas de a cuerdo a los valores que se definen en la clase, valores como MODEL,FORM_CLASS
-
-
-        :return: una consulta
-        :rtype: Queryset
-        """
-
-        
         return self.model.objects.filter(estado=True)
 
-    def get_context_data(self, **kwargs):
-        """Retorna un contexto a enviar a template.
-        Aquí definimos todas las variables que necesitamos enviar a nuestro template definido en TEMPLATE_NAME,
-        se agregan a un diccionario general para poder ser enviados en la funcion RENDER.
-
-
-        :return: un contexto
-        :rtype: dict
-        """
-
-
-        contexto = {}
-        contexto['autores'] = self.get_queryset()   #agregamos la consulta al contexto
-        contexto['form'] = self.form_class
-        return contexto
-
     def get(self, request, *args, **kwargs):
-        """Renderiza un template con un contexto dado.
-        Se encarga de manejar toda petición enviada del navegador a Django a través del método GET
-        del protocolo HTTP, en este caso renderiza un template definido en TEMPLATE_NAME junto con
-        el contexto definido en GET_CONTEXT_DATA.
+        if request.is_ajax():
+            return HttpResponse(serialize('json', self.get_queryset()), 'application/json')
+        else:
+            return redirect('libro:inicio_autor')
 
 
-        :return: render
-        :rtype: func
-        """
-
-
-        return render(request, self.template_name, self.get_context_data())
-
-class ActualizarAutor(UpdateView):
-    """Contiene la lógica para edición de un Autor
-
-
-    :parámetro model: Modelo a utilizarse
-    :type model: Model
-    :parámetro form_class: Form de Django referente a model
-    :type form_class: DjangoForm
-    :parámetro template_name: Template a utilizarse en la clase
-    :type template_name: str
-    :parámetro success_url: Url de redireccionado al actualizar
-    :type success_url: URL
-
-    """
-
-
+class ActualizarAutor(LoginYSuperStaffMixin, ValidarPermisosMixin, UpdateView):
     model = Autor
     form_class = AutorForm
     template_name = 'libro/autor/autor.html'
-    success_url = reverse_lazy('libro:listar_autor')
+    permission_required = ('libro.view_autor', 'libro.add_autor',
+                           'libro.delete_autor', 'libro.change_autor')
+    
+    def post(self, request, *args, **kwargs):
+        if request.is_ajax():
+            form = self.form_class(request.POST, instance=self.get_object())
+            if form.is_valid():
+                form.save()
+                mensaje = f'{self.model.__name__} actualizado correctamente!'
+                error = 'No hay error!'
+                response = JsonResponse({'mensaje': mensaje, 'error': error})
+                response.status_code = 201
+                return response
+            else:
+                mensaje = f'{self.model.__name__} no se ha podido actualizar!'
+                error = form.errors
+                response = JsonResponse({'mensaje': mensaje, 'error': error})
+                response.status_code = 400
+                return response
+        else:
+            return redirect('libro:inicio_autor')
 
-class CrearAutor(CreateView):
-    """Contiene la lógica para crear un Autor
 
-
-    :parámetro model: Modelo a utilizarse
-    :type model: Model
-    :parámetro form_class: Form de Django referente a model
-    :type form_class: DjangoForm
-    :parámetro template_name: Template a utilizarse en la clase
-    :type template_name: str
-    :parámetro success_url: Url de redireccionado al actualizar
-    :type success_url: URL
-
-    """
-
-
+class CrearAutor(LoginYSuperStaffMixin, ValidarPermisosMixin, CreateView):
     model = Autor
     form_class = AutorForm
     template_name = 'libro/autor/crear_autor.html'
-    success_url = reverse_lazy('libro:listar_autor')
+    permission_required = ('libro.view_autor', 'libro.add_autor',
+                           'libro.delete_autor', 'libro.change_autor')
 
-class EliminarAutor(DeleteView):
-    """Contiene la lógica para eliminar un Autor
+    def post(self, request, *args, **kwargs):
+        if request.is_ajax():
+            form = self.form_class(request.POST)
+            if form.is_valid():
+                nuevo_autor = Autor(
+                    nombre=form.cleaned_data.get('nombre'),
+                    apellidos=form.cleaned_data.get('apellidos'),
+                    nacionalidad=form.cleaned_data.get('nacionalidad'),
+                    descripcion=form.cleaned_data.get('descripcion')
+                )
+                nuevo_autor.save()
+                mensaje = f'{self.model.__name__} registrado correctamente!'
+                error = 'No hay error!'
+                response = JsonResponse({'mensaje': mensaje, 'error': error})
+                response.status_code = 201
+                return response
+            else:
+                mensaje = f'{self.model.__name__} no se ha podido registrar!'
+                error = form.errors
+                response = JsonResponse({'mensaje': mensaje, 'error': error})
+                response.status_code = 400
+                return response
+        else:
+            return redirect('libro:inicio_autor')
 
 
-    :parámetro model: Modelo a utilizarse
-    :type model: Model
-
-    """
-
-
+class EliminarAutor(LoginYSuperStaffMixin, ValidarPermisosMixin, DeleteView):
     model = Autor
+    template_name = 'libro/autor/eliminar_autor.html'
+    permission_required = ('libro.view_autor', 'libro.add_autor',
+                           'libro.delete_autor', 'libro.change_autor')
 
-    def post(self,request,pk,*args,**kwargs):
-        """Elimina logicamente un objeto.
-        Se encarga de manejar las peticiones de tipo POST enviadas del navegador a Django.
-
-
-        :parámetro pk: clave primaria
-        :type pk: int
-        :parámetro request: petición enviada del navegador
-        :type request: request
-        :return: redirect
-        :rtype: func
-        """
-
-
-        object = Autor.objects.get(id = pk)
-        object.estado = False
-        object.save()
+    def delete(self,request,pk,*args,**kwargs):
+        if request.is_ajax():
+            autor = self.get_object()
+            autor.estado = False
+            autor.save()
+            mensaje = f'{self.model.__name__} eliminado correctamente!'
+            error = 'No hay error!'
+            response = JsonResponse({'mensaje': mensaje, 'error': error})
+            response.status_code = 201
+            return response
         return redirect('libro:listar_autor')
 
 
+class InicioLibro(LoginYSuperStaffMixin, ValidarPermisosMixin, TemplateView):
+    template_name = 'libro/libro/listar_libro.html'
+    permission_required = ('libro.view_libro', 'libro.add_libro',
+                           'libro.delete_libro', 'libro.change_libro')
 
-class CrearLibro(CreateView):
+
+class CrearLibro(LoginYSuperStaffMixin, ValidarPermisosMixin, CreateView):
     model = Libro
     form_class = LibroForm
     template_name = 'libro/libro/crear_libro.html'
-    success_url = reverse_lazy('libro:listado_libros')
+    permission_required = ('libro.view_libro', 'libro.add_libro',
+                           'libro.delete_libro', 'libro.change_libro')
 
-class ListadoLibros(View):
+    def post(self, request, *args, **kwargs):
+        if request.is_ajax():
+            form = self.form_class(request.POST)
+            if form.is_valid():
+                form.save()
+                mensaje = f'{self.model.__name__} registrado correctamente!'
+                error = 'No hay error!'
+                response = JsonResponse({'mensaje': mensaje, 'error': error})
+                response.status_code = 201
+                return response
+            else:
+                mensaje = f'{self.model.__name__} no se ha podido registrar!'
+                error = form.errors
+                response = JsonResponse({'mensaje': mensaje, 'error': error})
+                response.status_code = 400
+                return response
+        return redirect('libro:inicio_libro')
+
+
+class ListadoLibros(LoginYSuperStaffMixin, ValidarPermisosMixin, ListView):
     model = Libro
-    form_class = LibroForm
-    template_name = 'libro/libro/listar_libro.html'
+    permission_required = ('libro.view_libro', 'libro.add_libro',
+                           'libro.delete_libro', 'libro.change_libro')
 
     def get_queryset(self):
         return self.model.objects.filter(estado = True)
 
-    def get_context_data(self,**kwargs):
-        contexto = {}
-        contexto['libros'] = self.get_queryset()
-        contexto['form'] = self.form_class
-        return contexto
-
-    def get(self,request,*args,**kwargs):
-        return render(request,self.template_name,self.get_context_data())
+    def get(self, request, *args, **kwargs):
+        if request.is_ajax():
+            return HttpResponse(serialize('json', self.get_queryset()), 'application/json')
+        else:
+            return redirect('libro:inicio_libro')
 
 
-class ActualizarLibro(UpdateView):
+class ActualizarLibro(LoginYSuperStaffMixin, ValidarPermisosMixin, UpdateView):
     model = Libro
     form_class = LibroForm
     template_name = 'libro/libro/libro.html'
-    success_url = reverse_lazy('libro:listado_libros')
+    permission_required = ('libro.view_libro', 'libro.add_libro',
+                           'libro.delete_libro', 'libro.change_libro')
 
-    def get_context_data(self,**kwargs):
-        context = super().get_context_data(**kwargs)
-        context['libros'] = Libro.objects.filter(estado = True)
-        return context
+    def post(self, request, *args, **kwargs):
+        if request.is_ajax():
+            form = self.form_class(request.POST, instance=self.get_object())
+            if form.is_valid():
+                form.save()
+                mensaje = f'{self.model.__name__} actualizado correctamente!'
+                error = 'No hay error!'
+                response = JsonResponse({'mensaje': mensaje, 'error': error})
+                response.status_code = 201
+                return response
+            else:
+                mensaje = f'{self.model.__name__} no se ha podido actualizar!'
+                error = form.errors
+                response = JsonResponse({'mensaje': mensaje, 'error': error})
+                response.status_code = 400
+                return response
+        else:
+            return redirect('libro:inicio_libro')
 
-class EliminarLibro(DeleteView):
+
+class EliminarLibro(LoginYSuperStaffMixin, ValidarPermisosMixin, DeleteView):
     model = Libro
+    template_name = 'libro/libro/eliminar_libro.html'
+    permission_required = ('libro.view_libro', 'libro.add_libro',
+                           'libro.delete_libro', 'libro.change_libro')
 
     def post(self,request,pk,*args,**kwargs):
-        object = Libro.objects.get(id = pk)
-        object.estado = False
-        object.save()
-        return redirect('libro:listado_libros')
+        if request.is_ajax():
+            libro = self.get_object()
+            libro.estado = False
+            libro.save()
+            mensaje = f'{self.model.__name__} eliminado correctamente!'
+            error = 'No hay error!'
+            response = JsonResponse({'mensaje': mensaje, 'error': error})
+            response.status_code = 201
+            return response
+        return redirect('libro:listar_libro')

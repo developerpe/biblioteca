@@ -41,14 +41,14 @@
                     <li class="menu-item-has-children dropdown">
                        <a href="" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-users"></i>Autores</a>
                        <ul class="sub-menu children dropdown-menu">
-                           <li><i class="fa fa-table"></i><a href="{% url 'libro:listar_autor' %}">Listado de Autores</a></li>
+                           <li><i class="fa fa-table"></i><a href="{% url 'libro:inicio_autor' %}">Listado de Autores</a></li>
                        </ul>
                     </li>
                     <li class="menu-item-has-children dropdown">
                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-book"></i>Libros</a>
                        <ul class="sub-menu children dropdown-menu">
                            
-                           <li><i class="fa fa-table"></i><a href="{% url 'libro:listado_libros' %}">Listado de Libros</a></li>
+                           <li><i class="fa fa-table"></i><a href="{% url 'libro:inicio_libro' %}">Listado de Libros</a></li>
                        </ul>
                     </li>
                 </ul>
@@ -75,7 +75,7 @@
                         </a>
                         <div class="user-menu dropdown-menu">
                             <a class="nav-link" href="#"><i class="fa fa- user"></i>Perfil</a>
-                            <a class="nav-link" href="#"><i class="fa fa -cog"></i>Administración</a>
+                            <a class="nav-link" href="{% url 'admin:index' %}"><i class="fa fa -cog"></i>Administración</a>
                             <a class="nav-link" href="{% url 'logout' %}"><i class="fa fa-power -off"></i>Logout</a>
                         </div>
                     </div>

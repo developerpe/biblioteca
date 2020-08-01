@@ -44,12 +44,12 @@ def logoutUsuario(request):
     return HttpResponseRedirect('/accounts/login/')
 
 
-class InicioUsuarios(ValidarPermisosMixin, TemplateView):
+class InicioUsuarios(LoginYSuperStaffMixin, ValidarPermisosMixin, TemplateView):
     template_name='usuarios/listar_usuario.html'
     permission_required = ('libro.permiso_admin',)
 
 
-class ListadoUsuario(ValidarPermisosMixin, ListView):
+class ListadoUsuario(LoginYSuperStaffMixin, ValidarPermisosMixin, ListView):
     model = Usuario
     permission_required = ('libro.permiso_admin',)
 

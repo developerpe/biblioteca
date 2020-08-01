@@ -6,14 +6,18 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        <form action="{% url 'libro:crear_autor' %}" method="POST">
+        <form id="form_creacion" action="{% url 'libro:crear_autor' %}" method="POST">
             {% csrf_token %}
             <div class="modal-body">
+                <div id="errores">
+
+                </div>
                 {{ form.as_p }}
             </div>
             <div class="modal-footer">
-                <button class="btn btn-danger" type="button" data-dismiss="modal">Cancelar</button>
-                <button class="btn btn-primary" type="submit">Confirmar</button>
+                <button class="btn btn-danger" type="button" onclick="cerrar_modal_creacion();">Cancelar</button>
+                <button id="boton_creacion" class="btn btn-primary" type="button"
+                    onclick="registrar();">Confirmar</button>
             </div>
         </form>
     </div>

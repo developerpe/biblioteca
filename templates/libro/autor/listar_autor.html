@@ -1,73 +1,56 @@
 {% extends 'index.html' %}
-
+{% load staticfiles %}
 {% block titulo %}
-  Biblioteca.dev | Listado de Autores
+Biblioteca.dev | Listado de Autores
 {% endblock titulo %}
-
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/lib/datatable/dataTables.bootstrap.min.css' %}">
+{% endblock extra_css %}
 {% block body %}
-<div>
-  <button class="btn btn-primary" type="button" onclick="abrir_modal_creacion('{% url 'libro:crear_autor' %}')">Crear
-    Autor</button>
-</div>
-  {% if autores %}
-      <div class="card">
-          <div class="card-header">
-              <strong class="card-title">Listado de Autores</strong>
-          </div>
-          <div class="table-stats order-table ov-h">
-              <table class="table">
-                  <thead>
-                      <tr>
-                        <th>ID</th>
-                        <th>Nombres</th>
-                        <th>Apellidos</th>
-                        <th>Nacionalidad</th>
-                        <th>Descripcion</th>
-                        <th>Opciones</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                    {% for autor in autores %}
-                      <tr>
-                        <td>{{ autor.id }}</td>
-                        <td>{{ autor.nombre }}</td>
-                        <td>{{ autor.apellidos }}</td>
-                        <td>{{ autor.nacionalidad }}</td>
-                        <td>{{ autor.descripcion }}</td>
-                        <td>                          
-                          <button onclick="abrir_modal_edicion('{% url 'libro:editar_autor' autor.id %}')" class="btn btn-primary">Editar</button>
-                          <a href="{% url 'libro:eliminar_autor' autor.id %}" class="btn btn-danger">Eliminar</a>
-                        </td>
-                      </tr>
-                    {% endfor %}
-                  </tbody>
-              </table>
-          </div>
+<div class="card">
+  <div class="card-header">
+    <div class="row">
+      <div class="col-md-8">
+        <strong class="card-title">Listado de Autores</strong>
       </div>
-      {% else %}
-        <h1>No existen autores registrados</h1>
-      {% endif %}
+      <div class="col-md-4">
+        <button type="button" class="btn btn-primary"
+          onclick="abrir_modal_creacion('{% url 'libro:crear_autor' %}');"> REGISTRAR AUTOR</button>
+      </div>
+    </div>
+
+  </div>
+  <div class="table-stats order-table ov-h">
+    <table id="tabla_autores" class="table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Nombres</th>
+          <th>Apellidos</th>
+          <th>Nacionalidad</th>
+          <th>Descripcion</th>
+          <th>Opciones</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+  </div>
+</div>
 <div class="modal fade" id="creacion" role="dialog">
 
 </div>
-
 <div class="modal fade" id="edicion" role="dialog">
 
 </div>
+<div class="modal fade" id="eliminacion" role="dialog">
+
+</div>
+
 
 {% endblock body %}
 {% block extrajs %}
-<script type="text/javascript">
-  var $ = jQuery.noConflict();
-  function abrir_modal_edicion(url) {
-    $('#edicion').load(url, function () {
-      $(this).modal('show');
-    });
-  }
-  function abrir_modal_creacion(url) {
-    $('#creacion').load(url, function () {
-      $(this).modal('show');
-    });
-  }
-</script>
+<script src="{% static 'js/lib/data-table/datatables.min.js' %}"></script>
+<script src="{% static 'js/lib/data-table/dataTables.bootstrap.min.js' %}"></script>
+<script src="{% static 'js/libro/autor.js' %}"></script>
 {% endblock extrajs %}
