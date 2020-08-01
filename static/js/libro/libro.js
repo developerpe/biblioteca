@@ -13,7 +13,11 @@ function listadoLibros() {
                 fila += '<td>' + (i + 1) + '</td>';
                 fila += '<td>' + response[i]["fields"]['titulo'] + '</td>';
                 fila += '<td>' + response[i]["fields"]['fecha_publicacion'] + '</td>';
-                fila += '<td>' + response[i]["fields"]['autor_id'] + '</td>';
+                if (response[i]["fields"]['autor_id'] == ''){
+                    fila += '<td>Desconocido</td>';
+                }else{
+                    fila += '<td>' + response[i]["fields"]['autor_id'] + '</td>';
+                }                
                 fila += '<td><button type = "button" class = "btn btn-primary btn-sm tableButton"';
                 fila += ' onclick = "abrir_modal_edicion(\'/libro/editar_libro/' + response[i]['pk'] + '/\');"> EDITAR </button>';
                 fila += '<button type = "button" class = "btn btn-danger tableButton  btn-sm" ';

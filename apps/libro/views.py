@@ -152,7 +152,7 @@ class ListadoLibros(LoginYSuperStaffMixin, ValidarPermisosMixin, ListView):
 
     def get(self, request, *args, **kwargs):
         if request.is_ajax():
-            return HttpResponse(serialize('json', self.get_queryset()), 'application/json')
+            return HttpResponse(serialize('json', self.get_queryset(),use_natural_foreign_keys = True), 'application/json')
         else:
             return redirect('libro:inicio_libro')
 
@@ -190,7 +190,7 @@ class EliminarLibro(LoginYSuperStaffMixin, ValidarPermisosMixin, DeleteView):
     permission_required = ('libro.view_libro', 'libro.add_libro',
                            'libro.delete_libro', 'libro.change_libro')
 
-    def post(self,request,pk,*args,**kwargs):
+    def delete(self, request, pk, *args, **kwargs):
         if request.is_ajax():
             libro = self.get_object()
             libro.estado = False

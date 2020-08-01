@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.signals import post_save
 
 class Autor(models.Model):
     id = models.AutoField(primary_key = True)
@@ -13,6 +14,9 @@ class Autor(models.Model):
         verbose_name = 'Autor'
         verbose_name_plural = 'Autores'
         ordering = ['nombre']
+
+    def natural_key(self):
+        return f'{self.nombre} {self.apellidos}'
 
     def __str__(self):
         return self.nombre
@@ -33,3 +37,13 @@ class Libro(models.Model):
 
     def __str__(self):
         return self.titulo
+
+def eliminar_relaciones_libros(sender,instance,**kwargs):
+    autor_id = instance.id
+    if instance.estado == False:
+        libros = Libro.objects.filter(autor_id=autor_id)
+        if libros:
+            for libro in libros:
+                libro.autor_id.remove(autor_id)
+
+post_save.connect(eliminar_relaciones_libros,sender=Autor)
