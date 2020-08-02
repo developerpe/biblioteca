@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 from django.db.models.signals import post_save
 
 class Autor(models.Model):
@@ -9,6 +10,8 @@ class Autor(models.Model):
     descripcion = models.TextField(blank = False,null = False)
     estado = models.BooleanField('Estado', default = True)
     fecha_creacion = models.DateField('Fecha de creación', auto_now = True, auto_now_add = False)
+
+       
 
     class Meta:
         verbose_name = 'Autor'
@@ -38,12 +41,11 @@ class Libro(models.Model):
     def __str__(self):
         return self.titulo
 
-def eliminar_relaciones_libros(sender,instance,**kwargs):
-    autor_id = instance.id
+def quitar_relacion_autor_libro(sender,instance,**kwargs):
     if instance.estado == False:
-        libros = Libro.objects.filter(autor_id=autor_id)
-        if libros:
-            for libro in libros:
-                libro.autor_id.remove(autor_id)
+        autor = instance.id
+        libros = Libro.objects.filter(autor_id=autor)
+        for libro in libros:
+            libro.autor_id.remove(autor)
 
-post_save.connect(eliminar_relaciones_libros,sender=Autor)
+post_save.connect(quitar_relacion_autor_libro,sender = Autor)
