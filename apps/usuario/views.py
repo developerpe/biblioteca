@@ -46,12 +46,14 @@ def logoutUsuario(request):
 
 class InicioUsuarios(LoginYSuperStaffMixin, ValidarPermisosMixin, TemplateView):
     template_name='usuarios/listar_usuario.html'
-    permission_required = ('libro.permiso_admin',)
+    permission_required = ('usuario.view_usuario', 'usuario.add_usuario',
+                           'usuario.delete_usuario', 'usuario.change_usuario')
 
 
 class ListadoUsuario(LoginYSuperStaffMixin, ValidarPermisosMixin, ListView):
     model = Usuario
-    permission_required = ('libro.permiso_admin',)
+    permission_required = ('usuario.view_usuario', 'usuario.add_usuario',
+                           'usuario.delete_usuario', 'usuario.change_usuario')
 
     def get_queryset(self):
         return self.model.objects.filter(is_active=True)

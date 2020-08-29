@@ -1,9 +1,16 @@
 from django.contrib import admin
+from import_export import resources
+from import_export.admin import ImportExportModelAdmin
 from .models import Autor,Libro
 
+class AutorResource(resources.ModelResource):
+    class Meta:
+        model = Autor
 
-
-class AutorAdmin(admin.ModelAdmin):
+class AutorAdmin(ImportExportModelAdmin,admin.ModelAdmin):
+    search_fields = ('nombre','apellidos','nacionalidad')
+    list_display = ('nombre','apellidos','nacionalidad','estado')
+    resource_class = AutorResource
     actions = ['eliminacion_logica_autores', 'activacion_logica_autores']
 
     def eliminacion_logica_autores(self, request, queryset):
