@@ -125,7 +125,7 @@ class CrearLibro(LoginYSuperStaffMixin, ValidarPermisosMixin, CreateView):
 
     def post(self, request, *args, **kwargs):
         if request.is_ajax():
-            form = self.form_class(request.POST,request.FILES)
+            form = self.form_class(data = request.POST,files = request.FILES)
             if form.is_valid():
                 form.save()
                 mensaje = f'{self.model.__name__} registrado correctamente!'
@@ -166,8 +166,7 @@ class ActualizarLibro(LoginYSuperStaffMixin, ValidarPermisosMixin, UpdateView):
 
     def post(self, request, *args, **kwargs):
         if request.is_ajax():
-            print(request.FILES)
-            form = self.form_class(request.POST,request.FILES, instance=self.get_object())
+            form = self.form_class(data = request.POST,files = request.FILES,instance=self.get_object())
             if form.is_valid():
                 form.save()
                 mensaje = f'{self.model.__name__} actualizado correctamente!'
