@@ -10,6 +10,13 @@ class LoginYSuperStaffMixin(object):
                 return super().dispatch(request, *args, **kwargs)
         return redirect('index')
 
+class LoginMixin(object):
+    
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return super().dispatch(request, *args, **kwargs)
+        return redirect('index')
+
 class ValidarPermisosMixin(object):
     permission_required = ''
     url_redirect = None

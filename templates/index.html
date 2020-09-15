@@ -52,6 +52,15 @@
                        </ul>
                     </li> 
                     {% endif %}
+                    <li class="menu-item-has-children dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i
+                                class="menu-icon fa fa-book"></i>Libros</a>
+                        <ul class="sub-menu children dropdown-menu">                    
+                            <li><i class="fa fa-table"></i><a href="{% url 'libro:listar_libros_disponibles' %}">Listado de Libros Disponibles</a></li>
+                            <li><i class="fa fa-table"></i><a href="{% url 'libro:listar_libros_reservados' %}">Listado de Libros Reservados</a>
+                            </li>
+                        </ul>
+                    </li>
                 </ul>
             </div><!-- /.navbar-collapse -->
         </nav>

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Autor,Libro
+from .models import Autor,Libro,Reserva
 
 class AutorForm(forms.ModelForm):
     class Meta:
@@ -75,3 +75,9 @@ class LibroForm(forms.ModelForm):
                 }
             )
         }
+
+
+class ReservaForm(forms.ModelForm):
+    class Meta:
+        model = Reserva
+        exclude = ('usuario',)

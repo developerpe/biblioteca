@@ -12,5 +12,10 @@ urlpatterns = [
     path('listado_libros/', ListadoLibros.as_view(), name = 'listado_libros'),
     path('crear_libro/',CrearLibro.as_view(), name = 'crear_libro'),
     path('editar_libro/<int:pk>/', ActualizarLibro.as_view(), name = 'editar_libro'),
-    path('eliminar_libro/<int:pk>/', EliminarLibro.as_view(), name = 'eliminar_libro')
+    path('eliminar_libro/<int:pk>/', EliminarLibro.as_view(), name = 'eliminar_libro'),
+    # URLS Generales
+    path('listar-libros-disponibles/',ListadoLibrosUsuarios.as_view(), name = 'listar_libros_disponibles'),
+    path('listar-libros-reservados/',ListadoLibrosReservados.as_view(), name = 'listar_libros_reservados'),
+    path('detalle-libro/<int:pk>/',DetalleLibroUsuarios.as_view(), name = 'detalle_libro'),
+    path('reservar-libro/',RegistrarReserva.as_view(), name = 'reservar_libro')
 ]

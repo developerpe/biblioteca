@@ -1,0 +1,60 @@
+{% extends 'index.html' %}
+{% load staticfiles %}
+{% block titulo %}
+Biblioteca.dev | Listado de Libros Disponibles
+{% endblock titulo %}
+{% block extra_css %}
+{% endblock extra_css %}
+{% block body %}
+<div class="card">
+    <div class="card-header">
+        <div class="row" style="margin: 30px;">
+            <div class="col-md-12 text-center ">
+                <strong class="card-title">
+                    <h2>Listado de Libros Disponibles</h2>
+                </strong>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                {% for libro in object_list %}
+                <div class="col-md-4">
+                    <a href="{% url 'libro:detalle_libro' libro.id %}">
+                        <div class="card">
+                            <img class="card-img-top" src="{{ libro.imagen.url }}" alt="Card image cap">
+                            <div class="card-body">
+                                <h4 class="card-title mb-3">{{ libro.titulo }}</h4>
+                                <p class="card-text">{{ libro.descripcion }}</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; Primera</a>
+                <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+                {% endif %}
+
+                <span class="current">
+                    Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
+                </span>
+
+                {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">Última &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    </div>
+</div>
+
+
+{% endblock body %}
+{% block extrajs %}
+{% endblock extrajs %}

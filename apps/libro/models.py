@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.db.models.signals import post_save
+from apps.usuario.models import Usuario
 
 class Autor(models.Model):
     id = models.AutoField(primary_key = True)
@@ -30,7 +31,7 @@ class Libro(models.Model):
     titulo = models.CharField('Título', max_length = 255, blank = False, null = False)
     fecha_publicacion = models.DateField('Fecha de publicación', blank = False, null = False)
     descripcion = models.TextField('Descripción',null = True,blank = True)
-    cantidad = models.SmallIntegerField('Cantidad o Stock',default = 1)
+    cantidad = models.PositiveIntegerField('Cantidad o Stock',default = 1)
     imagen = models.ImageField('Imagen', upload_to='libros/',max_length=255,null = True,blank = True)
     autor_id = models.ManyToManyField(Autor)
     fecha_creacion = models.DateField('Fecha de creación', auto_now = True, auto_now_add = False)
@@ -43,6 +44,33 @@ class Libro(models.Model):
 
     def __str__(self):
         return self.titulo
+    
+    def obtener_autores(self):
+        autores = str([autor for autor in self.autor_id.all().values_list('nombre',flat=True)])
+        autores = autores.replace("[","").replace("]","").replace("'","")
+        return autores
+
+class Reserva(models.Model):
+    """Model definition for Reserva."""
+    id = models.AutoField(primary_key = True)
+    libro = models.ForeignKey(Libro, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    cantidad_dias = models.SmallIntegerField('Cantidad de Dias a reservar',default = 7)
+    fecha_creacion = models.DateField('Fecha de creación', auto_now = True, auto_now_add = False)
+    estado = models.BooleanField(default = True, verbose_name = 'Estado')
+
+    # TODO: Define fields here
+
+    class Meta:
+        """Meta definition for Reserva."""
+
+        verbose_name = 'Reserva'
+        verbose_name_plural = 'Reservas'
+
+    def __str__(self):
+        """Unicode representation of Reserva."""
+        return f'Reserva de {self.libro} por {self.usuario}'
+
 
 def quitar_relacion_autor_libro(sender,instance,**kwargs):
     if instance.estado == False:
@@ -51,4 +79,11 @@ def quitar_relacion_autor_libro(sender,instance,**kwargs):
         for libro in libros:
             libro.autor_id.remove(autor)
 
+def reducir_cantidad_libro(sender,instance,**kwargs):
+    libro = instance.libro
+    if libro.cantidad > 0:
+        libro.cantidad = libro.cantidad - 1
+        libro.save()
+
+post_save.connect(reducir_cantidad_libro,sender = Reserva)
 post_save.connect(quitar_relacion_autor_libro,sender = Autor)

@@ -1,0 +1,75 @@
+{% extends 'index.html' %}
+{% load staticfiles %}
+{% block titulo %}
+Biblioteca.dev | {{ object }}
+{% endblock titulo %}
+{% block extra_css %}
+{% endblock extra_css %}
+{% block body %}
+<div class="card">
+    <div class="card-header">
+        <div class="row" style="margin: 30px;">
+            <div class="col-md-12 text-center ">
+                <strong class="card-title">
+                    <h2>{{ object }}</h2>
+                </strong>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                {% csrf_token %}
+                <div class="card">
+                    <img class="card-img-top" src="{{ object.imagen.url }}" alt="Card image cap">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p class="card-text">Publicado el: {{ object.fecha_publicacion }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="card-text"><strong>Autores</strong></p>{{ object.obtener_autores }}
+                            </div>
+                            <div class="col-md-12">
+                                <p class="card-text"><strong>Descripcion</strong></p>
+                            </div>
+                            <div class="col-md-12">
+                                <p class="card-text">{{ object.descripcion }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <button class="btn btn-primary" type="button" onclick="registrarReserva();">REGISTRAR RESERVA</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+{% endblock body %}
+{% block extrajs %}
+<script type="text/javascript">
+    function registrarReserva(){
+        data = {
+            'usuario': "{{ request.user.id }}",
+            'libro': "{{ object.id }}",
+            csrfmiddlewaretoken: $("[name='csrfmiddlewaretoken']").val()
+        }
+        $.ajax({
+            data: data,
+            url: "{% url 'libro:reservar_libro' %}",
+            type: 'POST',
+            success: function (response) {
+                notificacionSuccess(response.mensaje);
+                window.location.href = response.url;
+            },
+            error: function (error) {
+                notificacionError(error.responseJSON.mensaje);
+                mostrarErroresCreacion(error);
+            }
+        });
+    }
+</script>
+{% endblock extrajs %}
