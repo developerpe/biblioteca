@@ -18,8 +18,8 @@ Biblioteca.dev | {{ object }}
 
         <div class="container">
             <div class="row">
-                {% csrf_token %}
                 <div class="card">
+                    {% csrf_token %}
                     <img class="card-img-top" src="{{ object.imagen.url }}" alt="Card image cap">
                     <div class="card-body">
                         <div class="row">
@@ -39,7 +39,7 @@ Biblioteca.dev | {{ object }}
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <button class="btn btn-primary" type="button" onclick="registrarReserva();">REGISTRAR RESERVA</button>
+                    <button type="button" class="btn btn-primary btn-lg" onclick="registrarReserva();">RESERVAR ESTE LIBRO</button>
                 </div>
             </div>
         </div>
@@ -54,20 +54,19 @@ Biblioteca.dev | {{ object }}
     function registrarReserva(){
         data = {
             'usuario': "{{ request.user.id }}",
-            'libro': "{{ object.id }}",
+            'libro':"{{ object.id }}",
             csrfmiddlewaretoken: $("[name='csrfmiddlewaretoken']").val()
         }
         $.ajax({
-            data: data,
-            url: "{% url 'libro:reservar_libro' %}",
+            data:data,
+            url:"{% url 'libro:reservar_libro' %}",
             type: 'POST',
-            success: function (response) {
+            success:function(response){
                 notificacionSuccess(response.mensaje);
                 window.location.href = response.url;
             },
-            error: function (error) {
+            error:function(error){
                 notificacionError(error.responseJSON.mensaje);
-                mostrarErroresCreacion(error);
             }
         });
     }

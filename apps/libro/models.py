@@ -1,6 +1,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save,pre_save
 from apps.usuario.models import Usuario
 
 class Autor(models.Model):
@@ -43,23 +43,23 @@ class Libro(models.Model):
         ordering = ['titulo']
 
     def __str__(self):
-        return self.titulo
-    
+        return self.titulo  
+
+
     def obtener_autores(self):
-        autores = str([autor for autor in self.autor_id.all().values_list('nombre',flat=True)])
-        autores = autores.replace("[","").replace("]","").replace("'","")
+        autores = str([autor for autor in self.autor_id.all().values_list('nombre',flat = True)]).replace("[","").replace("]","").replace("'","")
         return autores
 
 class Reserva(models.Model):
     """Model definition for Reserva."""
+
+    # TODO: Define fields here
     id = models.AutoField(primary_key = True)
     libro = models.ForeignKey(Libro, on_delete=models.CASCADE)
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
-    cantidad_dias = models.SmallIntegerField('Cantidad de Dias a reservar',default = 7)
+    cantidad_dias = models.SmallIntegerField('Cantidad de Dias a Reservar',default = 7)
     fecha_creacion = models.DateField('Fecha de creación', auto_now = True, auto_now_add = False)
     estado = models.BooleanField(default = True, verbose_name = 'Estado')
-
-    # TODO: Define fields here
 
     class Meta:
         """Meta definition for Reserva."""
@@ -69,7 +69,7 @@ class Reserva(models.Model):
 
     def __str__(self):
         """Unicode representation of Reserva."""
-        return f'Reserva de {self.libro} por {self.usuario}'
+        return f'Reserva de Libro {self.libro} por {self.usuario}'
 
 
 def quitar_relacion_autor_libro(sender,instance,**kwargs):
@@ -85,5 +85,11 @@ def reducir_cantidad_libro(sender,instance,**kwargs):
         libro.cantidad = libro.cantidad - 1
         libro.save()
 
-post_save.connect(reducir_cantidad_libro,sender = Reserva)
+def validar_creacion_reserva(sender,instance,**kwargs):
+    libro = instance.libro
+    if libro.cantidad < 1:
+        raise Exception("No puede realizar esta reserva")
+
 post_save.connect(quitar_relacion_autor_libro,sender = Autor)
+post_save.connect(reducir_cantidad_libro,sender = Reserva)
+#pre_save.connect(validar_creacion_reserva,sender = Reserva)
