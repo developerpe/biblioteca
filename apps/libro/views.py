@@ -213,6 +213,36 @@ class ListadoLibrosDisponibles(LoginMixin,ListView):
         queryset = self.model.objects.filter(estado = True,cantidad__gte = 1)
         return queryset
 
+class ListadoLibrosReservados(LoginMixin,TemplateView):
+    template_name = 'libro/libros_reservados.html'
+
+class Reservas(LoginMixin,ListView):
+    model = Reserva
+
+    def get_queryset(self):
+        return self.model.objects.filter(estado = True,usuario = self.request.user)
+
+    def get(self, request, *args, **kwargs):
+        if request.is_ajax():
+            return HttpResponse(serialize('json', self.get_queryset(),use_natural_foreign_keys = True), 'application/json')
+        else:
+            return redirect('libro:listado_libros_reservados')
+
+class ListadoReservasVencias(LoginMixin,TemplateView):
+    template_name = 'libro/reservas_vencidas.html'
+
+class ReservasVencidas(LoginMixin,ListView):
+    model = Reserva
+
+    def get_queryset(self):
+        return self.model.objects.filter(estado = False,usuario = self.request.user)
+
+    def get(self, request, *args, **kwargs):
+        if request.is_ajax():
+            return HttpResponse(serialize('json', self.get_queryset(),use_natural_foreign_keys = True), 'application/json')
+        else:
+            return redirect('libro:listado_reservas_vencidas')
+
 class DetalleLibroDiponible(LoginMixin,DetailView):
     model = Libro
     template_name = 'libro/detalle_libro_disponible.html'

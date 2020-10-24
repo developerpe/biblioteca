@@ -37,6 +37,9 @@ class Libro(models.Model):
     fecha_creacion = models.DateField('Fecha de creación', auto_now = True, auto_now_add = False)
     estado = models.BooleanField(default = True, verbose_name = 'Estado')
 
+    def natural_key(self):
+        return self.titulo
+
     class Meta:
         verbose_name = 'Libro'
         verbose_name_plural = 'Libros'
