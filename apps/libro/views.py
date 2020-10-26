@@ -213,8 +213,13 @@ class ListadoLibrosDisponibles(LoginMixin,ListView):
         queryset = self.model.objects.filter(estado = True,cantidad__gte = 1)
         return queryset
 
-class ListadoLibrosReservados(LoginMixin,TemplateView):
+class ListadoLibrosReservados(LoginMixin,ListView):
+    model = Reserva
     template_name = 'libro/libros_reservados.html'
+
+    def get_queryset(self):
+        queryset = self.model.objects.filter(estado = True,usuario = self.request.user)
+        return queryset
 
 class Reservas(LoginMixin,ListView):
     model = Reserva

@@ -5,30 +5,19 @@ Biblioteca.dev | Listado de Libros Reservados
 {% endblock titulo %}
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/lib/datatable/dataTables.bootstrap.min.css' %}">
+<link rel="stylesheet" href="{% static 'fullcalendar/lib/main.css' %}">
 {% endblock extra_css %}
 {% block body %}
 <div class="card">
     <div class="card-header">
         <div class="row">
             <div class="col-md-8">
-                <strong class="card-title">Listado de Libros Reservados</strong>
+                <h2><strong class="card-title">Libros Reservados</strong></h2> 
             </div>
         </div>
 
     </div>
-    <div class="table-stats order-table ov-h">
-        <table id="tabla_libros" class="table">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Título</th>
-                    <th>Fecha de Reserva</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
+    <div id="calendar" class="card" style="padding: 20px;"></div>
 </div>
 
 
@@ -36,5 +25,29 @@ Biblioteca.dev | Listado de Libros Reservados
 {% block extrajs %}
 <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
 <script src="{% static 'js/lib/data-table/dataTables.bootstrap.min.js' %}"></script>
+<script src="{% static 'fullcalendar/lib/main.js' %}"></script>
+<script src="{% static 'fullcalendar/lib/locales-all.js' %}"></script>
 <script src="{% static 'js/libro/reservas.js' %}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function(){
+        var calendarUI = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarUI,{
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+            },
+            events: [
+                {% for reserva in object_list %}
+                    {
+                        title: "Libro reservado -> {{ reserva.libro.titulo }}",
+                        start: '{{ reserva.fecha_creacion | date:"Y-m-d" }}',
+                        end: '{{ reserva.fecha_vencimiento | date:"Y-m-d" }}',
+                    },
+                {% endfor %}
+            ]
+        });
+        calendar.render();
+        calendar.setOption('locale','es');
+    });
+</script>
 {% endblock extrajs %}

@@ -6,7 +6,7 @@ from .forms import ReservaForm
 
 class ReservaAdmin(admin.ModelAdmin):
     form = ReservaForm
-    list_display = ('libro','usuario','fecha_creacion','estado')
+    list_display = ('libro','usuario','fecha_creacion','fecha_vencimiento','estado')
 
 class AutorResource(resources.ModelResource):
     class Meta:

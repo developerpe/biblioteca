@@ -1,3 +1,4 @@
+from datetime import timedelta
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.db.models.signals import post_save,pre_save
@@ -60,8 +61,9 @@ class Reserva(models.Model):
     id = models.AutoField(primary_key = True)
     libro = models.ForeignKey(Libro, on_delete=models.CASCADE)
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
-    cantidad_dias = models.SmallIntegerField('Cantidad de Dias a Reservar',default = 7)
-    fecha_creacion = models.DateField('Fecha de creación', auto_now = True, auto_now_add = False)
+    cantidad_dias = models.SmallIntegerField('Cantidad de Dias a Reservar',default = 7)    
+    fecha_creacion = models.DateField('Fecha de creación', auto_now = False, auto_now_add = True)
+    fecha_vencimiento = models.DateField('Fecha de vencimiento de la reserva', auto_now=False, auto_now_add=False, null = True, blank = True)
     estado = models.BooleanField(default = True, verbose_name = 'Estado')
 
     class Meta:
@@ -73,7 +75,6 @@ class Reserva(models.Model):
     def __str__(self):
         """Unicode representation of Reserva."""
         return f'Reserva de Libro {self.libro} por {self.usuario}'
-
 
 def quitar_relacion_autor_libro(sender,instance,**kwargs):
     if instance.estado == False:
@@ -93,6 +94,12 @@ def validar_creacion_reserva(sender,instance,**kwargs):
     if libro.cantidad < 1:
         raise Exception("No puede realizar esta reserva")
 
+def agregar_fecha_vencimiento_reserva(sender,instance,**kwargs):
+    if instance.fecha_vencimiento is None or instance.fecha_vencimiento == '':
+        instance.fecha_vencimiento = instance.fecha_creacion + timedelta(days = instance.cantidad_dias)
+        instance.save()
+
 post_save.connect(quitar_relacion_autor_libro,sender = Autor)
 post_save.connect(reducir_cantidad_libro,sender = Reserva)
+post_save.connect(agregar_fecha_vencimiento_reserva,sender = Reserva)
 #pre_save.connect(validar_creacion_reserva,sender = Reserva)
