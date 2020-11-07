@@ -1,6 +1,7 @@
 from django.urls import path
 from django.contrib.auth.decorators import login_required
 from .views import *
+from .formsets import FormsetAutor
 
 urlpatterns = [
     path('inicio_autor/',InicioAutor.as_view(), name = 'inicio_autor'),
@@ -20,5 +21,8 @@ urlpatterns = [
     path('listado-libros-reservados/',ListadoLibrosReservados.as_view(), name = 'listado_libros_reservados'),
     path('listado-reservas-vencidas/',ListadoReservasVencias.as_view(), name = 'listado_reservas_vencidas'),
     path('detalle-libro/<int:pk>/',DetalleLibroDiponible.as_view(), name = 'detalle_libro'),
-    path('reservar-libro/',RegistrarReserva.as_view(), name = 'reservar_libro')
+    path('reservar-libro/',RegistrarReserva.as_view(), name = 'reservar_libro'),
+
+    # FORMSETS
+    path('crear_autor_formset', FormsetAutor.as_view(), name = 'crear_autor_formset')
 ]

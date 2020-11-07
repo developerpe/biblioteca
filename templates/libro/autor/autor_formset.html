@@ -1,0 +1,37 @@
+{% extends 'index.html' %}
+{% load staticfiles %}
+{% block titulo %}
+Biblioteca.dev | Formset Autor
+{% endblock titulo %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/lib/datatable/dataTables.bootstrap.min.css' %}">
+{% endblock extra_css %}
+{% block body %}
+
+<div class="card">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-8">
+                <h2><strong>Creacion de Autores con FormSets</strong></h2> 
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <form method="POST">
+            {% csrf_token %}
+                {{ form.management_form }}
+                {% for fo in form %}
+                    <div class="card" style="padding: 20px;">
+                        {{ fo }}
+                    </div>
+                    <br>
+                {% endfor %}
+            <button type="submit">REGISTRAR</button>
+        </form>
+    </div>
+</div>
+
+{% endblock body %}
+{% block extrajs %}
+{% endblock extrajs %}

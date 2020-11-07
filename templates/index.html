@@ -30,7 +30,7 @@
                     <li class="active">
                         <a href="{% url 'index' %}"><i class="menu-icon fa fa-laptop"></i>Inicio</a>
                     </li>
-                    {% if request.user|has_group:"Grupo1" %}
+                    {% if request.user.is_superuser %}
                     <li class="menu-item-has-children dropdown">
                         <a href="" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i
                                 class="menu-icon fa fa-users"></i>Usuarios</a>

@@ -22,6 +22,7 @@ class Inicio(LoginRequiredMixin,TemplateView):
     groups_required = ['Grupo1','Grupo2']
 
     def get(self,request,*args,**kwargs):
+        """
         contador = 0
         grupos_usuario = request.user.groups.all().values('name')
         for grupo in grupos_usuario:
@@ -37,6 +38,7 @@ class Inicio(LoginRequiredMixin,TemplateView):
         # usuario.user_permissions.remove(permiso1,permiso2,...)
         # usuario.user_permissions.set([lista_permisos])
         # usuario.user_permissions.clear()
+        """
         return render(request,self.template_name)
 
 class Login(FormView):
