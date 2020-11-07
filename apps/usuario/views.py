@@ -19,7 +19,25 @@ class Inicio(LoginRequiredMixin,TemplateView):
     """Clase que renderiza el index del sistema"""
 
     template_name = 'index.html'
+    groups_required = ['Grupo1','Grupo2']
 
+    def get(self,request,*args,**kwargs):
+        contador = 0
+        grupos_usuario = request.user.groups.all().values('name')
+        for grupo in grupos_usuario:
+            if grupo['name'] in self.groups_required:
+                contador += 1
+
+        if contador == len(self.groups_required):
+            return render(request,self.template_name)
+        else:
+            print("NO ESTA DENTRO DE LOS GRUPOS")
+        # agregar un permiso
+        # usuario.user_permissions.add(permiso1,permiso2,...)
+        # usuario.user_permissions.remove(permiso1,permiso2,...)
+        # usuario.user_permissions.set([lista_permisos])
+        # usuario.user_permissions.clear()
+        return render(request,self.template_name)
 
 class Login(FormView):
     template_name = 'login.html'
@@ -76,14 +94,7 @@ class RegistrarUsuario(LoginYSuperStaffMixin, ValidarPermisosMixin, CreateView):
         if request.is_ajax():
             form = self.form_class(request.POST)
             if form.is_valid():
-                nuevo_usuario = Usuario(
-                    email=form.cleaned_data.get('email'),
-                    username=form.cleaned_data.get('username'),
-                    nombres=form.cleaned_data.get('nombres'),
-                    apellidos=form.cleaned_data.get('apellidos')
-                )
-                nuevo_usuario.set_password(form.cleaned_data.get('password1'))
-                nuevo_usuario.save()
+                form.save()
                 mensaje = f'{self.model.__name__} registrado correctamente!'
                 error = 'No hay error!'
                 response = JsonResponse({'mensaje':mensaje,'error':error})
