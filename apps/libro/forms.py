@@ -5,7 +5,7 @@ from .models import Autor,Libro,Reserva
 class AutorForm(forms.ModelForm):
     class Meta:
         model = Autor
-        fields = ['nombre','apellidos','nacionalidad','descripcion']
+        fields = ['nombre','apellidos']
         labels = {
             'nombre': 'Nombre del autor',
             'apellidos': 'Apellidos del autor',
@@ -16,29 +16,25 @@ class AutorForm(forms.ModelForm):
             'nombre': forms.TextInput(
                 attrs = {
                     'class':'form-control',
-                    'placeholder':'Ingrese el nombre del autor',
-                    'id': 'nombre'
+                    'placeholder':'Ingrese el nombre del autor'
                 }
             ),
             'apellidos': forms.TextInput(
                 attrs = {
                     'class':'form-control',
-                    'placeholder':'Ingrese los apellidos del autor',
-                    'id':'apellidos'
+                    'placeholder':'Ingrese los apellidos del autor'
                 }
             ),
             'nacionalidad':forms.TextInput(
                 attrs = {
                     'class':'form-control',
-                    'placeholder':'Ingrese una nacionalidad para el autor',
-                    'id':'nacionalidad'
+                    'placeholder':'Ingrese una nacionalidad para el autor'
                 }
             ),
             'descripcion': forms.Textarea(
                 attrs = {
                     'class':'form-control',
-                    'placeholder': 'Ingrese una pequeña descripcion para el autor',
-                    'id':'descripcion'
+                    'placeholder': 'Ingrese una pequeña descripcion para el autor'
                 }
             )
         }

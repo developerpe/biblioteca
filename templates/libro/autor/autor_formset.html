@@ -22,16 +22,46 @@ Biblioteca.dev | Formset Autor
             {% csrf_token %}
                 {{ form.management_form }}
                 {% for fo in form %}
-                    <div class="card" style="padding: 20px;">
+                    <div id="formulario_autores" class="card" style="padding: 20px;">
                         {{ fo }}
                     </div>
                     <br>
-                {% endfor %}
+                {% endfor %}                
             <button type="submit">REGISTRAR</button>
-        </form>
+        </form> 
+        <button type="button" onclick="agregar_inputs();">AGREGAR</button>       
     </div>
 </div>
 
 {% endblock body %}
 {% block extrajs %}
+<script>
+    function agregar_inputs(){
+        var total_forms = document.querySelector('#id_form-TOTAL_FORMS');
+        
+        // nuevo label e input para nombres
+        var nuevo_label_nombre = document.createElement('label');
+        nuevo_label_nombre.innerHTML = 'Nombre del autor:';
+        var nuevo_input_nombre = document.querySelector('#id_form-0-nombre').cloneNode(true);
+        nuevo_input_nombre.name = 'form-'+total_forms.value+'-nombre';
+        nuevo_input_nombre.id = 'id_form-'+total_forms.value+'-nombre';
+
+        // nuevo label e input para apellidos
+        var nuevo_label_apellidos = document.createElement('label');
+        nuevo_label_apellidos.innerHTML = 'Apellidos del autor:';
+        var nuevo_input_apellidos = document.querySelector('#id_form-0-apellidos').cloneNode(true);
+        nuevo_input_apellidos.name = 'form-' + total_forms.value + '-apellidos';
+        nuevo_input_apellidos.id = 'id_form-' + total_forms.value + '-apellidos';
+
+        // agregamos los elementos creados
+        document.querySelector('#formulario_autores').appendChild(nuevo_label_nombre);
+        document.querySelector('#formulario_autores').appendChild(nuevo_input_nombre);
+        document.querySelector('#formulario_autores').appendChild(nuevo_label_apellidos);
+        document.querySelector('#formulario_autores').appendChild(nuevo_input_apellidos);
+
+        // aumentamos contador de formularios
+        total_forms.value = parseInt(total_forms.value) + 1;
+    }
+    
+</script>
 {% endblock extrajs %}
