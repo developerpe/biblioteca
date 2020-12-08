@@ -27,13 +27,13 @@ class AutorAdmin(ImportExportModelAdmin,admin.ModelAdmin):
         for autor in queryset:
             autor.estado = True
             autor.save()
-    
+    """
     def get_actions(self,request):
         actions = super().get_actions(request)
         if 'delete_selected' in actions:
             del actions['delete_selected']
         return actions
-
+    """
 
 admin.site.register(Autor, AutorAdmin)
 admin.site.register(Libro)

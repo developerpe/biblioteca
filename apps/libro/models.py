@@ -11,9 +11,7 @@ class Autor(models.Model):
     nacionalidad = models.CharField(max_length = 100, blank = False, null = False)
     descripcion = models.TextField(blank = False,null = False)
     estado = models.BooleanField('Estado', default = True)
-    fecha_creacion = models.DateField('Fecha de creación', auto_now = True, auto_now_add = False)
-
-       
+    fecha_creacion = models.DateField('Fecha de creación', auto_now = True, auto_now_add = False)       
 
     class Meta:
         verbose_name = 'Autor'
@@ -99,7 +97,11 @@ def agregar_fecha_vencimiento_reserva(sender,instance,**kwargs):
         instance.fecha_vencimiento = instance.fecha_creacion + timedelta(days = instance.cantidad_dias)
         instance.save()
 
+def saludar(sender,instance,**kwargs):
+    print("Hola desde signal de autor")
+
 post_save.connect(quitar_relacion_autor_libro,sender = Autor)
+#post_save.connect(saludar,sender = Autor)
 post_save.connect(reducir_cantidad_libro,sender = Reserva)
 post_save.connect(agregar_fecha_vencimiento_reserva,sender = Reserva)
 #pre_save.connect(validar_creacion_reserva,sender = Reserva)

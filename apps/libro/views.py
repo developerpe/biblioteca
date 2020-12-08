@@ -1,3 +1,4 @@
+from time import time
 from django.shortcuts import render,redirect
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.serializers import serialize
@@ -16,6 +17,40 @@ class InicioAutor(LoginYSuperStaffMixin, ValidarPermisosMixin, TemplateView):
     permission_required = ('libro.view_autor','libro.add_autor',
                             'libro.delete_autor','libro.change_autor')
 
+    def get(self,request,*args,**kwargs):
+        # METODO 1        
+        autores = Autor.objects.all()
+        tiempo_inicial = time()
+        for index,autor in enumerate(autores,10):
+            autor.descripcion = f'Descripcion editada con metodo {index}'
+            autor.save()
+        tiempo_final = time() - tiempo_inicial
+        print(f'Tiempo de Ejecución de método 1: {tiempo_final}')
+        
+        # METODO 2        
+        tiempo_inicial = time()
+        for index,autor in enumerate(autores,10):
+            autor.descripcion = f'Descripcion editada con metodo {index}'
+
+        for autor in autores:
+            autor.save()
+        tiempo_final = time() - tiempo_inicial
+        print(f'Tiempo de Ejecución de método 2: {tiempo_final}')
+
+        # METODO 3
+        """
+        tiempo_inicial = time()
+        Autor.objects.all().update(descripcion = 'Descripcion editada con metodo 3')
+        tiempo_final = time() - tiempo_inicial
+        print(f'Tiempo de Ejecución de método 3: {tiempo_final}')
+        """
+        tiempo_inicial = time()
+        for index,autor in enumerate(autores,10):
+            autor.descripcion = f'Descripcion editada con metodo {index}'
+        Autor.objects.bulk_update(autores,['descripcion'])
+        tiempo_final = time() - tiempo_inicial
+        print(f'Tiempo de Ejecución de método 3: {tiempo_final}')
+        return render(request,self.template_name)
 
 class ListadoAutor(LoginYSuperStaffMixin, ValidarPermisosMixin, ListView):
     model = Autor
