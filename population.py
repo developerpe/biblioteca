@@ -41,6 +41,7 @@ def generate_number():
 
 def generate_autor(count):
     for j in range(count):
+        print(f'Generando Autor #{j} . . .')
         random_name = generate_string(generate_number())
         random_last_name = generate_string(generate_number())
         random_country = generate_string(generate_number())
@@ -59,6 +60,6 @@ if __name__ == "__main__":
     print("Por favor espere . . . ")
     start = time.strftime("%c")
     print(f'Fecha y hora de inicio: {start}')
-    generate_autor(2000)
+    generate_autor(190000)
     end = time.strftime("%c")
     print(f'Fecha y hora de finalización: {end}')

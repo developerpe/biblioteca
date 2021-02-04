@@ -23,7 +23,7 @@ function listadoAutores() {
                 $('#tabla_autores tbody').append(fila);
             }
             $('#tabla_autores').DataTable({
-                language: {
+                "language": {
                     "decimal": "",
                     "emptyTable": "No hay información",
                     "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
@@ -104,5 +104,33 @@ function eliminar(pk) {
     });
 }
 $(document).ready(function () {
-    listadoAutores();
+    //listadoAutores();
+    $('#tabla_autores').DataTable({
+        "serverSide": true,
+        "processing": true,
+        "ajax": function(data,callback,settings){
+            var columna_filtro = data.columns[data.order[0].column].data.replace(/\./g,"__");
+            
+            $.get('/libro/listado_autor/',{
+                limite: data.length,
+                inicio: data.start,
+                filtro: data.search.value,
+                order_by: columna_filtro
+            }, function(res){
+                    callback({
+                        recordsTotal:res.length,
+                        recordsFiltered:res.length,
+                        data:res.objects
+                    });
+                },
+            );
+        },
+        "columns":[
+            { "data": "id" },
+            { "data": "nombre" },
+            { "data": "apellidos" },
+            { "data": "nacionalidad" },
+            { "data": "descripcion" },
+        ]
+    });
 });

@@ -1,3 +1,5 @@
+import json
+
 from time import time
 from django.shortcuts import render,redirect
 from django.core.exceptions import ObjectDoesNotExist
@@ -17,6 +19,7 @@ class InicioAutor(LoginYSuperStaffMixin, ValidarPermisosMixin, TemplateView):
     permission_required = ('libro.view_autor','libro.add_autor',
                             'libro.delete_autor','libro.change_autor')
 
+"""
     def get(self,request,*args,**kwargs):
         # METODO 1        
         autores = Autor.objects.all()
@@ -39,11 +42,13 @@ class InicioAutor(LoginYSuperStaffMixin, ValidarPermisosMixin, TemplateView):
 
         # METODO 3
         """
+"""
         tiempo_inicial = time()
         Autor.objects.all().update(descripcion = 'Descripcion editada con metodo 3')
         tiempo_final = time() - tiempo_inicial
         print(f'Tiempo de Ejecución de método 3: {tiempo_final}')
         """
+"""
         tiempo_inicial = time()
         for index,autor in enumerate(autores,10):
             autor.descripcion = f'Descripcion editada con metodo {index}'
@@ -51,18 +56,39 @@ class InicioAutor(LoginYSuperStaffMixin, ValidarPermisosMixin, TemplateView):
         tiempo_final = time() - tiempo_inicial
         print(f'Tiempo de Ejecución de método 3: {tiempo_final}')
         return render(request,self.template_name)
-
+"""
 class ListadoAutor(LoginYSuperStaffMixin, ValidarPermisosMixin, ListView):
     model = Autor
     permission_required = ('libro.view_autor', 'libro.add_autor',
                            'libro.delete_autor', 'libro.change_autor')
 
     def get_queryset(self):
-        return self.model.objects.filter(estado=True)
+        return self.model.objects.filter(
+                                    estado=True,
+                                    nombre__icontains = self.request.GET.get('filtro'),
+                                    apellidos__icontains = self.request.GET.get('filtro')
+                                ).values(
+                                    'id','nombre','apellidos',
+                                    'nacionalidad','descripcion'
+                                ).order_by(
+                                    f"{self.request.GET.get('order_by')}"
+                                )
 
     def get(self, request, *args, **kwargs):
         if request.is_ajax():
-            return HttpResponse(serialize('json', self.get_queryset()), 'application/json')
+            inicio = int(request.GET.get('inicio'))
+            fin = int(request.GET.get('limite'))
+            list_data = []
+            for indice,valor in enumerate(self.get_queryset()[inicio:inicio+fin],inicio):
+                valor['id'] = indice + 1
+                list_data.append(valor)
+            
+            data = {
+                'length': self.get_queryset().count(),
+                'objects':list_data
+            }
+
+            return HttpResponse(json.dumps(data), 'application/json')
         else:
             return redirect('libro:inicio_autor')
 
