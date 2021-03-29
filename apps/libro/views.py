@@ -19,6 +19,8 @@ class InicioAutor(LoginYSuperStaffMixin, ValidarPermisosMixin, TemplateView):
     permission_required = ('libro.view_autor','libro.add_autor',
                             'libro.delete_autor','libro.change_autor')
 
+
+
 """
     def get(self,request,*args,**kwargs):
         # METODO 1        

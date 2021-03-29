@@ -14,6 +14,7 @@ from apps.usuario.models import Usuario
 from apps.usuario.forms import FormularioLogin, FormularioUsuario
 from apps.usuario.mixins import LoginYSuperStaffMixin, ValidarPermisosMixin
 
+from apps.libro.models import Libro,Reserva
 
 class Inicio(LoginRequiredMixin,TemplateView):
     """Clase que renderiza el index del sistema"""
@@ -22,6 +23,26 @@ class Inicio(LoginRequiredMixin,TemplateView):
     groups_required = ['Grupo1','Grupo2']
 
     def get(self,request,*args,**kwargs):
+        # SELECT RELATED
+        """
+        print(Reserva.objects.select_related().all().query)
+        reservas = Reserva.objects.select_related().all()
+        for reserva in reservas:
+            print(reserva.usuario.username)
+            print(reserva.libro.titulo)
+            print(reserva.libro.fecha_publicacion)
+        """
+
+        # PREFETCH RELATED
+
+        print(Libro.objects.prefetch_related('autor_id').all().query)
+        print("----------------------------")
+        libros = Libro.objects.prefetch_related('autor_id').all()
+        for libro in libros:
+            print(libro.autor_id.all().query)
+            for autor in libro.autor_id.all():                
+                print(autor.nombre)
+        print("----------------------------")
         """
         contador = 0
         grupos_usuario = request.user.groups.all().values('name')
