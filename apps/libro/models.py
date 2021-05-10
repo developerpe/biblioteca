@@ -2,9 +2,12 @@ from datetime import timedelta
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.db.models.signals import post_save,pre_save
+
+from apps.automatic_crud.models import BaseModel
+
 from apps.usuario.models import Usuario
 
-class Autor(models.Model):
+class Autor(BaseModel):
     id = models.AutoField(primary_key = True)
     nombre = models.CharField(max_length = 200, blank = False, null = False)
     apellidos = models.CharField(max_length = 220, blank = False, null = False)
@@ -12,6 +15,8 @@ class Autor(models.Model):
     descripcion = models.TextField(blank = False,null = False)
     estado = models.BooleanField('Estado', default = True)
     fecha_creacion = models.DateField('Fecha de creación', auto_now = True, auto_now_add = False)       
+
+    all_cruds_types = True
 
     class Meta:
         verbose_name = 'Autor'
@@ -25,7 +30,7 @@ class Autor(models.Model):
         return self.nombre
 
 
-class Libro(models.Model):
+class Libro(BaseModel):
     id = models.AutoField(primary_key = True)
     titulo = models.CharField('Título', max_length = 255, blank = False, null = False)
     fecha_publicacion = models.DateField('Fecha de publicación', blank = False, null = False)
@@ -52,7 +57,7 @@ class Libro(models.Model):
         autores = str([autor for autor in self.autor_id.all().values_list('nombre',flat = True)]).replace("[","").replace("]","").replace("'","")
         return autores
 
-class Reserva(models.Model):
+class Reserva(BaseModel):
     """Model definition for Reserva."""
 
     # TODO: Define fields here

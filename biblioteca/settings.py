@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'import_export',
+    'apps.automatic_crud',
     'apps.libro',
     'apps.usuario',
 ]
