@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'import_export',
-    'apps.automatic_crud',
     'apps.libro',
     'apps.usuario',
 ]
@@ -82,7 +81,7 @@ WSGI_APPLICATION = 'biblioteca.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'biblio',
+        'NAME': 'db.sqlite3',
     }
 }
 
