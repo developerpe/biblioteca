@@ -49,21 +49,21 @@ class Rol(models.Model):
 
 
 class UsuarioManager(BaseUserManager):
-    def _create_user(self,username,email,nombres,password,is_staff,is_superuser,**extra_fields):
+    def _create_user(self, username, email, nombres, password, is_staff, is_superuser, **extra_fields):
         user = self.model(
-            username = username,
-            email = email,
-            nombres = nombres,
-            is_staff = is_staff,
-            is_superuser = is_superuser,
+            username=username,
+            email=email,
+            nombres=nombres,
+            is_staff=is_staff,
+            is_superuser=is_superuser,
             **extra_fields
         )
         user.set_password(password)
         user.save(using=self.db)
         return user
 
-    def create_user(self,username,email,nombres,password = None,**extra_fields):
-        return self._create_user(username,email,nombres,password,False,False,**extra_fields)
+    def create_user(self, username, email, nombres, is_staff, password=None, **extra_fields):
+        return self._create_user(username, email, nombres, password, is_staff, False, **extra_fields)
     
     def create_superuser(self,username,email,nombres,password = None,**extra_fields):
         return self._create_user(username, email, nombres, password, True, True, **extra_fields)
@@ -95,7 +95,6 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
             super().save(*args,**kwargs)
             if self.rol is not None:
                 grupo = Group.objects.filter(name = self.rol.rol).first()
-                print(grupo)
                 if grupo:
                     self.groups.add(grupo)
                 super().save(*args,**kwargs)
