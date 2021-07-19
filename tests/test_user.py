@@ -1,35 +1,27 @@
 import pytest
 
 from faker import Faker
+from ddf import G, N, F
 
 from tests.providers.general_providers import EmailProvider
-from apps.usuario.models import Usuario
+from apps.usuario.models import Usuario, Rol
 
 fake = Faker()
 fake.add_provider(EmailProvider)
 
 @pytest.fixture
 def user_creation():
-    return Usuario(
-                username=fake.first_name(),
-                email=fake.custom_email(),
-                nombres=fake.name(),
-                apellidos=fake.last_name(),
-                password=fake.phone_number()
-            )
+    rol = G(Rol)
+    return N(Usuario, rol=rol)
 
 @pytest.mark.django_db
 def test_common_user_creation(user_creation):
-    print(user_creation.email)
-    user_creation.is_staff = False
-    user_creation.save()
     assert user_creation.is_staff == False
 
 @pytest.mark.django_db
 def test_superuser_creation(user_creation):
     user_creation.is_superuser = True
     user_creation.is_staff = True
-    user_creation.save()
     assert user_creation.is_superuser
 
 @pytest.mark.django_db

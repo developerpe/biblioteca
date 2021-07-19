@@ -64,7 +64,7 @@ class LibroForm(forms.ModelForm):
 
     class Meta:
         model = Libro
-        fields = ('titulo','autor_id','fecha_publicacion','descripcion','imagen','cantidad')
+        fields = ('titulo','autor','fecha_publicacion','descripcion','imagen','cantidad')
         label = {
             'titulo':'Título del libro',
             'autor_id': 'Autor(es) del Libro',

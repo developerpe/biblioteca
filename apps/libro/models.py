@@ -35,7 +35,7 @@ class Libro(models.Model):
     descripcion = models.TextField('Descripción',null = True,blank = True)
     cantidad = models.PositiveIntegerField('Cantidad o Stock',default = 1)
     imagen = models.ImageField('Imagen', upload_to='libros/',max_length=255,null = True,blank = True)
-    autor_id = models.ManyToManyField(Autor)
+    autor = models.ManyToManyField(Autor)
     fecha_creacion = models.DateField('Fecha de creación', auto_now = True, auto_now_add = False)
     estado = models.BooleanField(default = True, verbose_name = 'Estado')
 
