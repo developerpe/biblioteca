@@ -27,7 +27,6 @@ def test_superuser_creation(user_creation):
 @pytest.mark.django_db
 def test_staff_user_creation(user_creation):
     user_creation.is_staff = True
-
     assert user_creation.is_staff
 
 @pytest.mark.django_db
