@@ -8,6 +8,7 @@ django-dynamic-fixture==3.1.1
 django-import-export==2.5.0
 django-querycount==0.7.0
 et-xmlfile==1.1.0
+factory-boy==3.2.0
 Faker==8.10.1
 iniconfig==1.1.1
 MarkupPy==1.14
