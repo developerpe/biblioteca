@@ -30,7 +30,7 @@ class UsuarioAdminFactory(factory.Factory):
     username = "oliver"
     is_staff = True
     is_superuser = True
-    rol = factory.SubFactory(RolFactory)
+    #rol = factory.SubFactory(RolFactory)
 
 class UsuarioStaffFactory(factory.django.DjangoModelFactory):
     class Meta:

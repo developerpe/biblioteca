@@ -1,6 +1,6 @@
 import pytest
 
-from django.test import TestCase
+from django.test import TestCase, Client
 
 from apps.usuario.models import Usuario
 from tests.factories import UsuarioAdminFactory, UsuarioComunFactory
@@ -34,6 +34,7 @@ def test_user_creation_fail():
 class UsuarioTestCase(TestCase):
 
     def setUp(self):
+        self.client = Client()
         self.common_user = UsuarioComunFactory.create()
         self.superuser = UsuarioAdminFactory.create()
     
@@ -45,3 +46,24 @@ class UsuarioTestCase(TestCase):
     def test_suerpuser_creation(self):
         self.assertEqual(self.superuser.is_staff, True)
         self.assertEqual(self.superuser.is_superuser, True)
+
+    def test_login(self):
+        self.common_user.set_password('oliver')
+        self.common_user.save()
+        response = self.client.login(username='oliver', password='oliver')
+        self.assertEquals(response, True)
+
+    def test_login_fail(self):
+        self.common_user.set_password('oliver')
+        self.common_user.save()
+        response = self.client.login(username='oliver', password='oliver1')
+        self.assertEquals(response, False)
+
+    def test_users_list(self):
+        self.superuser.set_password('oliver')
+        self.superuser.save()
+        self.client.login(username='oliver', password='oliver')
+        response = self.client.get('/usuarios/listado_usuarios/', 
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(len(response.json()), 1)
