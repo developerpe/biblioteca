@@ -5,14 +5,19 @@ from django.core.serializers import serialize
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
+from django.views.generic import View
 from django.views.generic.edit import FormView
 from django.contrib.auth import login, logout
 from django.http import HttpResponseRedirect,HttpResponse,JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin,PermissionRequiredMixin
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView,TemplateView
 from apps.usuario.models import Usuario
-from apps.usuario.forms import FormularioLogin, FormularioUsuario
-from apps.usuario.mixins import LoginYSuperStaffMixin, ValidarPermisosMixin
+from apps.usuario.forms import (
+    FormularioLogin, FormularioUsuario, CambiarPasswordForm
+)
+from apps.usuario.mixins import (
+    LoginYSuperStaffMixin, ValidarPermisosMixin, LoginMixin
+)
 
 from apps.libro.models import Libro,Reserva
 
@@ -178,3 +183,29 @@ class EliminarUsuario(LoginYSuperStaffMixin, ValidarPermisosMixin, DeleteView):
             return response
         else:
             return redirect('usuarios:inicio_usuarios')
+
+
+class CambiarPassword(LoginMixin, View):
+    template_name = 'usuarios/cambiar_password.html'
+    form_class = CambiarPasswordForm
+    success_url = reverse_lazy('index')
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, {'form': self.form_class})
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            user = Usuario.objects.filter(id=request.user.id)
+            if user.exists():
+                user = user.first()
+                user.set_password(form.cleaned_data.get('password1'))
+                user.save()
+                logout(request)
+                return redirect(self.success_url)
+            return redirect(self.success_url)
+        else:
+            form = self.form_class(request.POST)
+            return render(request, self.template_name, {'form': form})
+
+            

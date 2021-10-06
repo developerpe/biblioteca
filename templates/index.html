@@ -86,7 +86,7 @@
                             <img class="user-avatar rounded-circle" src="{% static 'images/admin.png' %}" alt="User Avatar">
                         </a>
                         <div class="user-menu dropdown-menu">
-                            <a class="nav-link" href="#"><i class="fa fa- user"></i>Perfil</a>
+                            <a class="nav-link" href="{% url 'usuarios:cambiar_password' %}"><i class="fa fa- user"></i>Cambiar Contraseña</a>
                             <a class="nav-link" href="{% url 'admin:index' %}"><i class="fa fa -cog"></i>Administración</a>
                             <a class="nav-link" href="{% url 'logout' %}"><i class="fa fa-power -off"></i>Logout</a>
                         </div>
